@@ -1,0 +1,97 @@
+<html>
+<head>
+    <title>
+        COMP Classes
+    </title>
+	<style>
+		body{
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 30px;
+		}
+		#main{
+				//background-color: #fffafa;
+            margin: auto;
+		}
+        ul{
+        list-style-type:none;
+        }
+        table{
+            border: none;
+        }
+        th{
+            font-weight: bold;
+            padding-bottom: 1em;
+            text-align: left;
+            padding-right: 2em;
+
+        }
+        td{
+            padding-bottom: 1em;
+            padding-right: 2em;
+        }
+		h1{
+            font-weight: normal;
+		}
+        h2{
+            font-weight: normal;
+		}
+        h3{
+            font-weight: normal;
+            margin-bottom: 0px;
+            margin-top: 0px;
+		}
+		a{
+            color: #337ab7;
+            outline:none;
+		}
+		a:hover {
+            color: hotpink;
+        }
+        .expandable {
+            display: none;
+        }
+
+	</style>
+
+	<script type="text/javascript">
+        window.onload = function() {
+            var showLink = document.getElementById("show");
+            var hideLink = document.getElementById("hide");
+
+            show.onclick = function() {
+                rows = document.getElementsByClassName('expandable');
+                for(i = 0; i < rows.length; i++) {
+                    rows[i].style.display = 'table-row';
+                }
+                return false;
+            }
+
+            hide.onclick = function() {
+                rows = document.getElementsByClassName('expandable');
+                for(i = 0; i < rows.length; i++) {
+                    rows[i].style.display = 'none';
+                }
+                return false;
+            }
+        }
+
+    </script>
+</head>
+<body>
+<h1>COMP Courses</h1>
+
+<p>Here is information about COMP class enrollment for spring 2022. Course numbers over 950 are not shown. Feel free to <a href="https://cs.unc.edu/~saba">contact me</a> with any questions/comments/issues. </p>
+
+<p>Click <a id="show">here</a> to show class descriptions. Click <a id="hide">here</a> to remove them.</p>
+
+<table>
+<tr>
+    <th>Class Number</th>
+    <th>Class</th>
+    <th>Meeting Time</th>
+    <th>Instructor</th>
+    <th>Room</th>
+    <th>Enrollment</th>
+    <th>Wait List</th>
+</tr>
+<!-- Everything from here on will be filled in by the python script, including the file-ending stuff-->
