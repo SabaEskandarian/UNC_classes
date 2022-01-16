@@ -5,7 +5,15 @@ import time
 import datetime
 from bs4 import BeautifulSoup
 
-#searches for spring 2022 classes numbered under 950
+###NOTE: to run this script, you need to do the following steps:
+#1) create working_files directory next to script
+#2) log in to connectcarolina on Chromium (must be a fresh login)
+#3) go to course search, and press F12 to open developer tools. Click on network tab
+#4) search for COMP classes in Spring 2022 with course number <=950, uncheck box about only searching for open classes
+#5) right click on the resulting POST request and select copy as curl. 
+#6) paste contents into COMP_search_curl.sh in SAME DIRECTORY as script
+
+#currently output text assumes searches for spring 2022 classes numbered under 950
 #fails if there are too many results
 
 
@@ -22,6 +30,7 @@ def getContentById(targetId, data):
 term = "spring 2022"
 dept_search_file = "COMP_search_curl.sh"
 
+#Can include any dept where there are <130 courses listed with a number under 950
 #COMP needs to be first or there will be issues
 dept_list = ["COMP", "STOR", "AAAD", "WGST", "DRAM", "AMST"]
 
@@ -152,7 +161,4 @@ for dept in dept_list:
 
     print("done with "+dept+"!")
 
-#copy files to server
-#comment this out for testing
-subprocess.run(["scp", "working_files/*.html", "login.cs.unc.edu:~/www/COMP_classes/"])
 print("done!")
