@@ -143,7 +143,8 @@ for dept in dept_list:
 
         html = html + tableLine + descriptionLine
 
-        print("processed class number " + str(i))
+        if i % 10 == 0:
+            print("processed class number " + str(i))
 
         #comment out when done testing
         #break early for testing
