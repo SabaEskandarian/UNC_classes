@@ -100,7 +100,7 @@ for dept in dept_list:
 
     #for each class
     for i in range(numClasses):
-        time.sleep(1) #avoid too many queries in a rush
+        time.sleep(.1) #avoid too many queries in a rush
 
         #form a class_search_curl.sh file by copying info from the dept search headers/cookies and modifying data
         class_search = dept_search
@@ -159,6 +159,6 @@ for dept in dept_list:
     outFile.write(html)
     outFile.close()
 
+    subprocess.run(["cp", "working_files/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/COMP_classes/"+outFileName])
     print("done with "+dept+"!")
-
 print("done!")
