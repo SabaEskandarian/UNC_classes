@@ -50,7 +50,9 @@
         .expandable {
             display: none;
         }
-
+        tr:nth-child(4n+2) {
+            background-color: #F2F7FB;
+        }
 	</style>
 
 	<script type="text/javascript">
@@ -63,6 +65,8 @@
                 for(i = 0; i < rows.length; i++) {
                     rows[i].style.display = 'table-row';
                 }
+                //important that the tr style be in position 12 or this will break
+                document.styleSheets[0].cssRules[12].selectorText = 'tr:nth-child(even)';
                 return false;
             }
 
@@ -71,6 +75,8 @@
                 for(i = 0; i < rows.length; i++) {
                     rows[i].style.display = 'none';
                 }
+                //important that the tr style be in position 12 or this will break
+                document.styleSheets[0].cssRules[12].selectorText = 'tr:nth-child(4n+2)';
                 return false;
             }
         }
