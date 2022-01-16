@@ -130,6 +130,11 @@ for dept in dept_list:
         waitlistMax = getContentById("SSR_CLS_DTL_WRK_WAIT_CAP", classRawData)
         description = getContentById("DERIVED_CLSRCH_DESCRLONG", classRawData)
 
+        #if meeting time is TBA, instructor is Staff, and nobody's enrolled, this is probably not a real class
+        #NOTE: this is a heuristic, but I think it's a good choice for making the results less cluttered
+        if classTime == "TBA" and instructor == "Staff" and int(enrollment) == 0:
+            continue
+
         #add html
 
         enrollmentTD = "<td>"
