@@ -61,7 +61,7 @@ for dept in dept_list:
     #abort if fail
     if numClasses == 0:
         print("wasn't able to find any classes")
-        break
+        sys.exit(1)
 
     #extract ICSID from the curl used for the dept search
     dept_search = open(dept_search_file, "r").read().splitlines()
