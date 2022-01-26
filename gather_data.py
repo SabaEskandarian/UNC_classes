@@ -32,7 +32,7 @@ dept_search_file = "COMP_search_curl.sh"
 
 #Can include any dept where there are <130 courses listed with a number under 950
 #COMP needs to be first or there will be issues
-dept_list = ["COMP", "STOR", "AAAD", "WGST", "DRAM", "AMST"]
+dept_list = ["COMP", "STOR", "AAAD", "WGST", "DRAM", "AMST", "BIOS"]
 
 for dept in dept_list:
 
