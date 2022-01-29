@@ -17,6 +17,7 @@ from bs4 import BeautifulSoup
 #fails if there are too many results
 
 
+#TODO: getContentById returns "None" for classes that are taught by multiple instructors because ConnectCarolina lists the id and the names on different lines. Fixing this shouldn't be too hard but will involve some modification of this function
 def getContentById(targetId, data):
     relevantData = ""
     for line in data.splitlines():
