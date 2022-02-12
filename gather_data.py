@@ -192,9 +192,11 @@ for dept in dept_list:
 
     html = html + "<h1>"+dept+" Courses</h1>\n\n"
 
-    html = html + "<p>Here is information about "+dept+" class enrollment for "+term+". Course numbers over 950 are sometimes not shown. Feel free to <a href='https://cs.unc.edu/~saba'>contact me</a> with any questions/comments/issues.</p>\n\n"
+    html = html + "<p>Here is information about "+dept+" class enrollment for <strong>"+term+"</strong>. Course numbers over 950 are sometimes not shown. Feel free to <a href='https://cs.unc.edu/~saba'>contact me</a> with any questions/comments/issues.</p>\n\n"
 
     html = html + "<p><strong>Click <a id='show'>here</a> to show class descriptions</strong>. Click <a id='hide'>here</a> to hide them.</p>\n\n"
+
+    html = html + "<script src='../choose_term.js'></script>\n"
 
     html = html + "<p> Data also available for: <a href='index.html'>COMP</a>"
 
