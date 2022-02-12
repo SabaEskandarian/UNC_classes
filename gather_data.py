@@ -16,6 +16,30 @@ from bs4 import BeautifulSoup
 #currently output text assumes searches for spring 2022 classes numbered under 950
 #fails if there are too many results
 
+#TODO: assuming class numbers don't repeat across terms. Might cause issues if they repeat across active terms.
+#TODO: assumes only 1 URL per note.
+#notes.txt file contains pairs of lines where first line is class number and second line is any custom notes to appear after description.
+def getCustomNotes(notesFileName):
+    notes = {}
+    fileContents = open(notesFileName, "r")
+    while True:
+        classNumStr = fileContents.readline().strip()
+        if not classNumStr:
+            break
+        note = fileContents.readline().strip()
+        if not note:
+            break
+        url = ""
+        hasURL = False
+        for word in note.split():
+            if "https://" in word or "http://" in word:
+                hasURL = True
+                url = word
+        if hasURL:
+            note = note.replace(url, "<a href='"+url+"'>"+url+"</a>")
+        notes[classNumStr] = note
+    #print(notes)
+    return notes
 
 #TODO: getContentById returns "None" for classes that are taught by multiple instructors because ConnectCarolina lists the id and the names on different lines. Fixing this shouldn't be too hard but will involve some modification of this function
 def getContentById(targetId, data):
@@ -75,7 +99,7 @@ def startClassList(dept_search_file):
 
     return numClasses
 
-def addClassEntry(dept_search_file, ICSID, i):
+def addClassEntry(dept_search_file, ICSID, i, notes):
     #form a class_search_curl.sh file by copying info from the dept search headers/cookies and modifying data
     class_search = open(dept_search_file, "r").read().splitlines()
     class_search[-2] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum=5&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
@@ -115,7 +139,12 @@ def addClassEntry(dept_search_file, ICSID, i):
     if int(enrollment) >= int(enrollmentMax):
         enrollmentTD = "<td style='color:red'>"
 
-    tableLines = "<tr><td>"+classNum+"</td><td>"+className+"</td><td>"+classTime+"</td><td>"+instructor+"</td><td>"+room+"</td>"+enrollmentTD+enrollment+"/"+enrollmentMax+"</td><td>"+waitlist+"/"+waitlistMax+"</td></tr>\n<tr class='expandable'><td colspan=7><strong>Description: </strong>"+description+" "+units+".</td></tr>\n"
+    tableLines = "<tr><td>"+classNum+"</td><td>"+className+"</td><td>"+classTime+"</td><td>"+instructor+"</td><td>"+room+"</td>"+enrollmentTD+enrollment+"/"+enrollmentMax+"</td><td>"+waitlist+"/"+waitlistMax+"</td></tr>\n<tr class='expandable'><td colspan=7><strong>Description: </strong>"+description+" "+units+"."
+
+    if classNum in notes:
+        tableLines = tableLines + "\n<br /><strong>Notes:</strong> "+notes[classNum]
+
+    tableLines = tableLines + "</td></tr>\n"
 
     return tableLines
 
@@ -123,6 +152,8 @@ def addClassEntry(dept_search_file, ICSID, i):
 
 term = "spring 2022"
 dept_search_file = "COMP_search_curl.sh"
+notes_file = "notes.txt"
+notes = getCustomNotes(notes_file)
 
 #extract ICSID from the curl used for the dept search
 dept_search = open(dept_search_file, "r").read().splitlines()
@@ -183,7 +214,7 @@ for dept in dept_list:
     #for each class
     for i in range(numClasses):
         time.sleep(.1) #avoid too many queries in a rush
-        html = html + addClassEntry(dept_search_file, ICSID, i)
+        html = html + addClassEntry(dept_search_file, ICSID, i, notes)
 
     #if this is a big dept, we need to repeat some of this work for the second file
     if bigDept:
@@ -193,7 +224,7 @@ for dept in dept_list:
         #for each class
         for i in range(numClasses):
             time.sleep(.1) #avoid too many queries in a rush
-            html = html + addClassEntry(dept_search_file, ICSID, i)
+            html = html + addClassEntry(dept_search_file, ICSID, i, notes)
 
         #if i % 10 == 0:
         #    print("processed class number " + str(i))
