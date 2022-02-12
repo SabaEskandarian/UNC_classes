@@ -151,6 +151,7 @@ def addClassEntry(dept_search_file, ICSID, i, notes):
 
 
 term = "spring 2022"
+term_folder = "spring2022"
 dept_search_file = "COMP_search_curl.sh"
 notes_file = "notes.txt"
 notes = getCustomNotes(notes_file)
@@ -238,6 +239,6 @@ for dept in dept_list:
     outFile.write(html)
     outFile.close()
 
-    subprocess.run(["cp", "working_files/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/COMP_classes/"+outFileName])
+    subprocess.run(["cp", "working_files/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/COMP_classes/"+term_folder+"/"+outFileName])
     print("done with "+dept+"!")
 print("done!")
