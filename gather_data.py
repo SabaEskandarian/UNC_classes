@@ -131,8 +131,9 @@ def addClassEntry(dept_search_file, ICSID, i, notes):
 
     #if meeting time is TBA, instructor is Staff, and nobody's enrolled, this is probably not a real class
     #NOTE: this is a heuristic, but I think it's a good choice for making the results less cluttered
-    if classTime == "TBA" and instructor == "Staff" and int(enrollment) == 0:
-        return ""
+   #NOTE: commenting this out now that the search query itself does a better job of decluttering
+   #if classTime == "TBA" and instructor == "Staff" and int(enrollment) == 0:
+    #    return ""
 
     #add html
     enrollmentTD = "<td>"
