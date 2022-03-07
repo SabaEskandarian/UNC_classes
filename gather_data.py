@@ -9,11 +9,12 @@ from bs4 import BeautifulSoup
 #1) create working_files directory next to script
 #2) log in to connectcarolina on Chromium (must be a fresh login)
 #3) go to course search, and press F12 to open developer tools. Click on network tab
-#4) search for COMP classes in Spring 2022 with course number <=950, uncheck box about only searching for open classes
+#4) search for COMP classes in Fall 2022 with course number <=999, uncheck box about only searching for open classes
+#   also check (under additional search criteria) days of week "includes any of these days" for Mon-Fri
 #5) right click on the resulting POST request and select copy as curl. 
 #6) paste contents into COMP_search_curl.sh in SAME DIRECTORY as script
 
-#currently output text assumes searches for spring 2022 classes numbered under 950
+#currently output text assumes searches for fall 2022 classes numbered under 999 with meeting time on any day of week
 #fails if there are too many results
 
 #TODO: assuming class numbers don't repeat across terms. Might cause issues if they repeat across active terms.
@@ -65,13 +66,13 @@ def createSearchCommand(dept, splitSearch):
         new_command_file.write(new_command)
         new_command_file.close()
     else:
-        new_command = subprocess.run(["sed", "-e", "s/COMP/"+dept+"/g", "-e", "s/SSR_CLSRCH_WRK_CATALOG_NBR\$1=950/SSR_CLSRCH_WRK_CATALOG_NBR\$1=500/g", "-e", "s/SSR_CLSRCH_WRK_SSR_EXACT_MATCH1\$1=T/SSR_CLSRCH_WRK_SSR_EXACT_MATCH1\$1=G/g", "COMP_search_curl.sh"], capture_output=True).stdout.decode("utf-8")
+        new_command = subprocess.run(["sed", "-e", "s/COMP/"+dept+"/g", "-e", "s/SSR_CLSRCH_WRK_CATALOG_NBR\$1=999/SSR_CLSRCH_WRK_CATALOG_NBR\$1=500/g", "-e", "s/SSR_CLSRCH_WRK_SSR_EXACT_MATCH1\$1=T/SSR_CLSRCH_WRK_SSR_EXACT_MATCH1\$1=G/g", "COMP_search_curl.sh"], capture_output=True).stdout.decode("utf-8")
         dept_search_file = "working_files/second_"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
         new_command_file.write(new_command)
         new_command_file.close()
 
-        new_command = subprocess.run(["sed", "-e", "s/COMP/"+dept+"/g", "-e", "s/SSR_CLSRCH_WRK_CATALOG_NBR\$1=950/SSR_CLSRCH_WRK_CATALOG_NBR\$1=500/g", "COMP_search_curl.sh"], capture_output=True).stdout.decode("utf-8")
+        new_command = subprocess.run(["sed", "-e", "s/COMP/"+dept+"/g", "-e", "s/SSR_CLSRCH_WRK_CATALOG_NBR\$1=999/SSR_CLSRCH_WRK_CATALOG_NBR\$1=500/g", "COMP_search_curl.sh"], capture_output=True).stdout.decode("utf-8")
         dept_search_file = "working_files/"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
         new_command_file.write(new_command)
@@ -102,7 +103,7 @@ def startClassList(dept_search_file):
 def addClassEntry(dept_search_file, ICSID, i, notes):
     #form a class_search_curl.sh file by copying info from the dept search headers/cookies and modifying data
     class_search = open(dept_search_file, "r").read().splitlines()
-    class_search[-2] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum=5&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
+    class_search[-2] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum=6&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
 
     #write the class search to a file
     class_file_name = "working_files/class_search_curl.sh"
@@ -150,8 +151,8 @@ def addClassEntry(dept_search_file, ICSID, i, notes):
 
 
 
-term = "spring 2022"
-term_folder = "spring2022"
+term = "fall 2022"
+term_folder = "fall2022"
 dept_search_file = "COMP_search_curl.sh"
 notes_file = "notes.txt"
 notes = getCustomNotes(notes_file)
@@ -164,12 +165,12 @@ end_ICSID = dept_search_data.find("&", start_ICSID)
 ICSID = dept_search_data[start_ICSID+6: end_ICSID]
 print("retrieved ICSID "+ICSID+"\n")
 
-#Can include any dept where there are <130 courses listed with a number under 950
+#Can include any dept where there are <130 courses listed with a number under 999
 #COMP needs to be first or there will be issues
 dept_list = ["COMP", "AAAD", "AMST", "BIOS", "COMM", "DRAM", "MATH", "STOR", "WGST"]
 #any department where there are <130 courses under 500 and another <130 listed over 500
 #needs to go in both dept_list and large_dept_list
-large_dept_list = ["COMM", "MATH"]
+large_dept_list = ["MATH"]
 
 for dept in dept_list:
 
@@ -192,7 +193,7 @@ for dept in dept_list:
 
     html = html + "<h1>"+dept+" Courses</h1>\n\n"
 
-    html = html + "<p>Here is information about "+dept+" class enrollment for <strong>"+term+"</strong>. Course numbers over 950 are sometimes not shown. Feel free to <a href='https://cs.unc.edu/~saba'>contact me</a> with any questions/comments/issues.</p>\n\n"
+    html = html + "<p>Here is information about "+dept+" class enrollment for <strong>"+term+"</strong>. Classes with no meeting time listed are not shown. Feel free to <a href='https://cs.unc.edu/~saba'>contact me</a> with any questions/comments/issues.</p>\n\n"
 
     html = html + "<p><strong>Click <a id='show'>here</a> to show class descriptions</strong>. Click <a id='hide'>here</a> to hide them.</p>\n\n"
 
