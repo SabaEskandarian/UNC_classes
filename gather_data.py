@@ -42,6 +42,21 @@ def getCustomNotes(notesFileName):
     #print(notes)
     return notes
 
+#names.txt file contains pairs of lines where first line is class name and second line is a custom name to replace the name. Use this to give names to CS special topics classes
+def getCustomNames(namesFileName):
+    names = {}
+    fileContents = open(namesFileName, "r")
+    while True:
+        classNameStr = fileContents.readline().strip()
+        if not classNameStr:
+            break
+        newName = fileContents.readline().strip()
+        if not newName:
+            break
+        names[classNameStr] = newName
+    #print(notes)
+    return names
+
 #TODO: getContentById returns "None" for classes that are taught by multiple instructors because ConnectCarolina lists the id and the names on different lines. Fixing this shouldn't be too hard but will involve some modification of this function
 def getContentById(targetId, data):
     relevantData = ""
@@ -100,7 +115,7 @@ def startClassList(dept_search_file):
 
     return numClasses
 
-def addClassEntry(dept_search_file, ICSID, i, notes):
+def addClassEntry(dept_search_file, ICSID, i, notes, names):
     #form a class_search_curl.sh file by copying info from the dept search headers/cookies and modifying data
     class_search = open(dept_search_file, "r").read().splitlines()
     class_search[-2] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum=6&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
@@ -119,6 +134,8 @@ def addClassEntry(dept_search_file, ICSID, i, notes):
     #parse class data, output html
     classNum = getContentById("SSR_CLS_DTL_WRK_CLASS_NBR", classRawData)
     className = getContentById("DERIVED_CLSRCH_DESCR200", classRawData)
+    if className in names:
+        className = names[className]
     classTime = getContentById("MTG_SCHED$0", classRawData)
     instructor = getContentById("MTG_INSTR$0", classRawData)
     room = getContentById("MTG_LOC$0", classRawData)
@@ -156,7 +173,9 @@ term = "fall 2022"
 term_folder = "fall2022"
 dept_search_file = "COMP_search_curl.sh"
 notes_file = "notes.txt"
+names_file = "names.txt"
 notes = getCustomNotes(notes_file)
+names = getCustomNames(names_file)
 
 #extract ICSID from the curl used for the dept search
 dept_search = open(dept_search_file, "r").read().splitlines()
@@ -219,7 +238,7 @@ for dept in dept_list:
     #for each class
     for i in range(numClasses):
         time.sleep(.1) #avoid too many queries in a rush
-        html = html + addClassEntry(dept_search_file, ICSID, i, notes)
+        html = html + addClassEntry(dept_search_file, ICSID, i, notes, names)
 
     #if this is a big dept, we need to repeat some of this work for the second file
     if bigDept:
@@ -229,7 +248,7 @@ for dept in dept_list:
         #for each class
         for i in range(numClasses):
             time.sleep(.1) #avoid too many queries in a rush
-            html = html + addClassEntry(dept_search_file, ICSID, i, notes)
+            html = html + addClassEntry(dept_search_file, ICSID, i, notes, names)
 
         #if i % 10 == 0:
         #    print("processed class number " + str(i))

@@ -1,4 +1,4 @@
 12859
-Introduction to Cryptography, course website: https://www.cs.unc.edu/~saba/crypto_class/index.html
+course website: https://www.cs.unc.edu/~saba/crypto_class/index.html
 12697
-Introduction to Cryptography, course website: https://www.cs.unc.edu/~saba/crypto_class/index.html
+course website: https://www.cs.unc.edu/~saba/crypto_class/index.html
