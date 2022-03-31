@@ -26,3 +26,5 @@ COMP&nbsp; 790 - 171&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 171&nbsp;&nbsp; Special Topics: Introduction to Cryptography
 COMP&nbsp; 790 - 172&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 172&nbsp;&nbsp; Special Topics: Human Robot Interaction
+COMP&nbsp; 790 - 033&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 790 - 033&nbsp;&nbsp; Special Topics: Topics in Parallel Computing
