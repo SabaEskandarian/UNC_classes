@@ -28,3 +28,7 @@ COMP&nbsp; 790 - 172&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 172&nbsp;&nbsp; Special Topics: Human Robot Interaction
 COMP&nbsp; 790 - 033&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 033&nbsp;&nbsp; Special Topics: Topics in Parallel Computing
+COMP&nbsp; 790 - 177&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 790 - 177&nbsp;&nbsp; Special Topics: Neural Rendering
+COMP&nbsp; 790 - 178&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 790 - 178&nbsp;&nbsp; Special Topics: Stochastic Performance Modeling and Scheduling in Computer Systems
