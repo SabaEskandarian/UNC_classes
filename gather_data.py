@@ -187,10 +187,10 @@ print("retrieved ICSID "+ICSID+"\n")
 
 #Can include any dept where there are <130 courses listed with a number under 999
 #COMP needs to be first or there will be issues
-dept_list = ["COMP", "AAAD", "AMST", "BIOS", "COMM", "DRAM", "MATH", "STOR", "WGST"]
+dept_list = ["COMP", "AAAD", "AMST", "BIOS", "COMM", "DRAM", "EDUC", "HIST", "MATH", "STOR", "WGST"]
 #any department where there are <130 courses under 500 and another <130 listed over 500
 #needs to go in both dept_list and large_dept_list
-large_dept_list = ["MATH"]
+large_dept_list = ["HIST","MATH"]
 
 for dept in dept_list:
 
