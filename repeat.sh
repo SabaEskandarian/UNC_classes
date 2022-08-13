@@ -7,7 +7,7 @@ do
 	touch $LOCATION/maintenance_needed
         break
     else
-        sleep 300
+        sleep 60
 	if test -f $LOCATION/stop_loop; then
 	    rm $LOCATION/stop_loop
 	    break
