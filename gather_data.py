@@ -93,12 +93,19 @@ def createSearchCommand(dept, splitSearch):
         new_command_file.write(new_command)
         new_command_file.close()
     return dept_search_file
+    
+def logResponse(fileName, data):
+    log_file = open(fileName, "w")
+    log_file.write(data)
+    log_file.close()
 
 def startClassList(dept_search_file):
     #use curl to get class list
     classListData = subprocess.run(["bash", dept_search_file], capture_output=True).stdout.decode("utf-8")
     #print("result of command: \n" + classListData)
     #classListData = open("class_list_res.html", "r").read()
+    #save classListData to a temp file in working_files directory
+    logResponse("working_files/dept_response.txt", classListData)
 
     #extract number of classes
     numClasses = 0
@@ -129,6 +136,9 @@ def addClassEntry(dept_search_file, ICSID, i, notes, names):
 
     #run query
     classRawData = subprocess.run(["bash", class_file_name], capture_output=True).stdout.decode("utf-8")
+    
+    #save classRawData to a temp file in working_files directory
+    logResponse("working_files/class_response.txt", classRawData)
 
     #print(classRawData)
     #parse class data, output html
