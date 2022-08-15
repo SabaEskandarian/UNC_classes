@@ -9,8 +9,7 @@ from bs4 import BeautifulSoup
 #1) create working_files directory next to script
 #2) log in to connectcarolina on Chromium (must be a fresh login)
 #3) go to course search, and press F12 to open developer tools. Click on network tab
-#4) search for COMP classes in Fall 2022 with course number <=999, uncheck box about only searching for open classes
-#   also check (under additional search criteria) days of week "includes any of these days" for Mon-Fri
+#4) search for COMP classes in Fall 2022 with course number <=500, uncheck box about only searching for open classes
 #5) right click on the resulting POST request and select copy as curl. 
 #6) paste contents into COMP_search_curl.sh in SAME DIRECTORY as script
 
@@ -72,26 +71,46 @@ def getContentById(targetId, data):
     soup = BeautifulSoup(relevantData, 'html.parser')
     return str(soup.find(id=targetId).string).replace(u'\xa0', u'&nbsp;')
     
+#bigState 0 is normal dept, 1 is first part of big dept, 2 is second part of big dept
+def makeDeptQuery(stateNum, ICSID, dept, bigState):
+    number = 999
+    matchDirection = "T"
+    if bigState != 0:
+        number = 500
+    if bigState == 2:
+        matchDirection = "G"
+    queryString = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum="+str(stateNum)+"&ICAction=CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=&CLASS_SRCH_WRK2_INSTITUTION$31$=UNCCH&CLASS_SRCH_WRK2_STRM$35$=2229&NC_CSE_ATTR_TBL_CRSE_ATTR_VALUE$0=&SSR_CLSRCH_WRK_SUBJECT$0="+dept+"&SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1="+matchDirection+"&SSR_CLSRCH_WRK_CATALOG_NBR$1="+str(number)+"&SSR_CLSRCH_WRK_ACAD_CAREER$2=&SSR_CLSRCH_WRK_SSR_OPEN_ONLY$chk$3=N&SSR_CLSRCH_WRK_SSR_START_TIME_OPR$4=GE&SSR_CLSRCH_WRK_MEETING_TIME_START$4=&SSR_CLSRCH_WRK_SSR_END_TIME_OPR$4=LE&SSR_CLSRCH_WRK_MEETING_TIME_END$4=&SSR_CLSRCH_WRK_INCLUDE_CLASS_DAYS$5=J&SSR_CLSRCH_WRK_MON$chk$5=Y&SSR_CLSRCH_WRK_MON$5=Y&SSR_CLSRCH_WRK_TUES$chk$5=Y&SSR_CLSRCH_WRK_TUES$5=Y&SSR_CLSRCH_WRK_WED$chk$5=Y&SSR_CLSRCH_WRK_WED$5=Y&SSR_CLSRCH_WRK_THURS$chk$5=Y&SSR_CLSRCH_WRK_THURS$5=Y&SSR_CLSRCH_WRK_FRI$chk$5=Y&SSR_CLSRCH_WRK_FRI$5=Y&SSR_CLSRCH_WRK_SAT$chk$5=Y&SSR_CLSRCH_WRK_SAT$5=Y&SSR_CLSRCH_WRK_SUN$chk$5=Y&SSR_CLSRCH_WRK_SUN$5=Y&SSR_CLSRCH_WRK_SSR_EXACT_MATCH2$6=B&SSR_CLSRCH_WRK_LAST_NAME$6=&SSR_CLSRCH_WRK_DESCR$7=&SSR_CLSRCH_WRK_CLASS_NBR$8=&SSR_CLSRCH_WRK_SSR_UNITS_MIN_OPR$9=GE&SSR_CLSRCH_WRK_UNITS_MINIMUM$9=&SSR_CLSRCH_WRK_SSR_UNITS_MAX_OPR$9=LE&SSR_CLSRCH_WRK_UNITS_MAXIMUM$9=&SSR_CLSRCH_WRK_SSR_COMPONENT$10=&SSR_CLSRCH_WRK_SESSION_CODE$11=&SSR_CLSRCH_WRK_INSTRUCTION_MODE$12=&SSR_CLSRCH_WRK_CAMPUS$13=' \\"
+    return queryString
+
 #extract class list(s)
-def createSearchCommand(dept, splitSearch):
+def createSearchCommand(dept, splitSearch, ICSID):
+    stateNum = 4
+
     if not splitSearch:
-        new_command = subprocess.run(["sed", "s/COMP/"+dept+"/g", "COMP_search_curl.sh"], capture_output=True).stdout.decode("utf-8")
+        command = open("COMP_search_curl.sh", "r").read().splitlines()
+        command[-2] = makeDeptQuery(stateNum, ICSID, dept, 0)
         dept_search_file = "working_files/"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
-        new_command_file.write(new_command)
+        for line in command:
+            new_command_file.write(line+"\n")
         new_command_file.close()
     else:
-        new_command = subprocess.run(["sed", "-e", "s/COMP/"+dept+"/g", "-e", "s/SSR_CLSRCH_WRK_CATALOG_NBR\$1=999/SSR_CLSRCH_WRK_CATALOG_NBR\$1=500/g", "-e", "s/SSR_CLSRCH_WRK_SSR_EXACT_MATCH1\$1=T/SSR_CLSRCH_WRK_SSR_EXACT_MATCH1\$1=G/g", "COMP_search_curl.sh"], capture_output=True).stdout.decode("utf-8")
+        command = open("COMP_search_curl.sh", "r").read().splitlines()
+        command[-2] = makeDeptQuery(stateNum, ICSID, dept, 2)
         dept_search_file = "working_files/second_"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
-        new_command_file.write(new_command)
+        for line in command:
+            new_command_file.write(line+"\n")
         new_command_file.close()
 
-        new_command = subprocess.run(["sed", "-e", "s/COMP/"+dept+"/g", "-e", "s/SSR_CLSRCH_WRK_CATALOG_NBR\$1=999/SSR_CLSRCH_WRK_CATALOG_NBR\$1=500/g", "COMP_search_curl.sh"], capture_output=True).stdout.decode("utf-8")
+        command = open("COMP_search_curl.sh", "r").read().splitlines()
+        command[-2] = makeDeptQuery(stateNum, ICSID, dept, 1)
         dept_search_file = "working_files/"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
-        new_command_file.write(new_command)
+        for line in command:
+            new_command_file.write(line+"\n")
         new_command_file.close()
+
     return dept_search_file
     
 def logResponse(fileName, data):
@@ -125,7 +144,8 @@ def startClassList(dept_search_file):
 def addClassEntry(dept_search_file, ICSID, i, notes, names):
     #form a class_search_curl.sh file by copying info from the dept search headers/cookies and modifying data
     class_search = open(dept_search_file, "r").read().splitlines()
-    class_search[-2] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum=6&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
+    StateNum = 5
+    class_search[-2] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum="+str(StateNum)+"&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
 
     #write the class search to a file
     class_file_name = "working_files/class_search_curl.sh"
@@ -135,7 +155,14 @@ def addClassEntry(dept_search_file, ICSID, i, notes, names):
     class_file.close()
 
     #run query
-    classRawData = subprocess.run(["bash", class_file_name], capture_output=True).stdout.decode("utf-8")
+    count = 0
+    classRawData = ""
+    while classRawData == "" and count < 5:
+        classRawData = subprocess.run(["bash", class_file_name], capture_output=True).stdout.decode("utf-8")
+        if classRawData == "":
+            time.sleep(0.1)
+            print("couldn't get classRawData, trying again\n")
+            count += 1
     
     #save classRawData to a temp file in working_files directory
     logResponse("working_files/class_response.txt", classRawData)
@@ -210,9 +237,7 @@ for dept in dept_list:
 
     print("starting to get data for "+dept)
 
-    if dept != "COMP":
-        dept_search_file = createSearchCommand(dept, bigDept)
-
+    dept_search_file = createSearchCommand(dept, bigDept, ICSID)
 
     numClasses = startClassList(dept_search_file)
 
