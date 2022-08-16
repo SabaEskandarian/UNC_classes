@@ -256,6 +256,8 @@ while termCounter < numTerms:
     #needs to go in both dept_list and large_dept_list
     large_dept_list = ["MATH"]
 
+    print("Starting term "+term)
+
     for dept in dept_list:
 
         bigDept = False
@@ -328,6 +330,6 @@ while termCounter < numTerms:
         print("done with "+dept+"!")
 
     termCounter += 1
-    print("done with term "+term+"!")
+    print("done with term "+term+"!\n")
 
 print("done!")
