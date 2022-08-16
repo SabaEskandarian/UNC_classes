@@ -79,7 +79,7 @@ def getContentById(targetId, data):
     return retString
     
 #bigState 0 is normal dept, 1 is first part of big dept, 2 is second part of big dept
-def makeDeptQuery(stateNum, ICSID, dept, bigState):
+def makeDeptQuery(term, stateNum, ICSID, dept, bigState):
     number = 999
     matchDirection = "T"
     if bigState != 0:
@@ -88,16 +88,16 @@ def makeDeptQuery(stateNum, ICSID, dept, bigState):
         matchDirection = "G"
         #TODO: term is hard-coded in this string. Make it variable set with the other term stuff
         #TODO: support simultaneous scanning of multiple terms; might require some incrementing of state
-    queryString = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum="+str(stateNum)+"&ICAction=CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=&CLASS_SRCH_WRK2_INSTITUTION$31$=UNCCH&CLASS_SRCH_WRK2_STRM$35$=2229&NC_CSE_ATTR_TBL_CRSE_ATTR_VALUE$0=&SSR_CLSRCH_WRK_SUBJECT$0="+dept+"&SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1="+matchDirection+"&SSR_CLSRCH_WRK_CATALOG_NBR$1="+str(number)+"&SSR_CLSRCH_WRK_ACAD_CAREER$2=&SSR_CLSRCH_WRK_SSR_OPEN_ONLY$chk$3=N&SSR_CLSRCH_WRK_SSR_START_TIME_OPR$4=GE&SSR_CLSRCH_WRK_MEETING_TIME_START$4=&SSR_CLSRCH_WRK_SSR_END_TIME_OPR$4=LE&SSR_CLSRCH_WRK_MEETING_TIME_END$4=&SSR_CLSRCH_WRK_INCLUDE_CLASS_DAYS$5=J&SSR_CLSRCH_WRK_MON$chk$5=Y&SSR_CLSRCH_WRK_MON$5=Y&SSR_CLSRCH_WRK_TUES$chk$5=Y&SSR_CLSRCH_WRK_TUES$5=Y&SSR_CLSRCH_WRK_WED$chk$5=Y&SSR_CLSRCH_WRK_WED$5=Y&SSR_CLSRCH_WRK_THURS$chk$5=Y&SSR_CLSRCH_WRK_THURS$5=Y&SSR_CLSRCH_WRK_FRI$chk$5=Y&SSR_CLSRCH_WRK_FRI$5=Y&SSR_CLSRCH_WRK_SAT$chk$5=Y&SSR_CLSRCH_WRK_SAT$5=Y&SSR_CLSRCH_WRK_SUN$chk$5=Y&SSR_CLSRCH_WRK_SUN$5=Y&SSR_CLSRCH_WRK_SSR_EXACT_MATCH2$6=B&SSR_CLSRCH_WRK_LAST_NAME$6=&SSR_CLSRCH_WRK_DESCR$7=&SSR_CLSRCH_WRK_CLASS_NBR$8=&SSR_CLSRCH_WRK_SSR_UNITS_MIN_OPR$9=GE&SSR_CLSRCH_WRK_UNITS_MINIMUM$9=&SSR_CLSRCH_WRK_SSR_UNITS_MAX_OPR$9=LE&SSR_CLSRCH_WRK_UNITS_MAXIMUM$9=&SSR_CLSRCH_WRK_SSR_COMPONENT$10=&SSR_CLSRCH_WRK_SESSION_CODE$11=&SSR_CLSRCH_WRK_INSTRUCTION_MODE$12=&SSR_CLSRCH_WRK_CAMPUS$13=' \\"
+    queryString = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum="+str(stateNum)+"&ICAction=CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=&CLASS_SRCH_WRK2_INSTITUTION$31$=UNCCH&CLASS_SRCH_WRK2_STRM$35$="+term+"&NC_CSE_ATTR_TBL_CRSE_ATTR_VALUE$0=&SSR_CLSRCH_WRK_SUBJECT$0="+dept+"&SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1="+matchDirection+"&SSR_CLSRCH_WRK_CATALOG_NBR$1="+str(number)+"&SSR_CLSRCH_WRK_ACAD_CAREER$2=&SSR_CLSRCH_WRK_SSR_OPEN_ONLY$chk$3=N&SSR_CLSRCH_WRK_SSR_START_TIME_OPR$4=GE&SSR_CLSRCH_WRK_MEETING_TIME_START$4=&SSR_CLSRCH_WRK_SSR_END_TIME_OPR$4=LE&SSR_CLSRCH_WRK_MEETING_TIME_END$4=&SSR_CLSRCH_WRK_INCLUDE_CLASS_DAYS$5=J&SSR_CLSRCH_WRK_MON$chk$5=Y&SSR_CLSRCH_WRK_MON$5=Y&SSR_CLSRCH_WRK_TUES$chk$5=Y&SSR_CLSRCH_WRK_TUES$5=Y&SSR_CLSRCH_WRK_WED$chk$5=Y&SSR_CLSRCH_WRK_WED$5=Y&SSR_CLSRCH_WRK_THURS$chk$5=Y&SSR_CLSRCH_WRK_THURS$5=Y&SSR_CLSRCH_WRK_FRI$chk$5=Y&SSR_CLSRCH_WRK_FRI$5=Y&SSR_CLSRCH_WRK_SAT$chk$5=Y&SSR_CLSRCH_WRK_SAT$5=Y&SSR_CLSRCH_WRK_SUN$chk$5=Y&SSR_CLSRCH_WRK_SUN$5=Y&SSR_CLSRCH_WRK_SSR_EXACT_MATCH2$6=B&SSR_CLSRCH_WRK_LAST_NAME$6=&SSR_CLSRCH_WRK_DESCR$7=&SSR_CLSRCH_WRK_CLASS_NBR$8=&SSR_CLSRCH_WRK_SSR_UNITS_MIN_OPR$9=GE&SSR_CLSRCH_WRK_UNITS_MINIMUM$9=&SSR_CLSRCH_WRK_SSR_UNITS_MAX_OPR$9=LE&SSR_CLSRCH_WRK_UNITS_MAXIMUM$9=&SSR_CLSRCH_WRK_SSR_COMPONENT$10=&SSR_CLSRCH_WRK_SESSION_CODE$11=&SSR_CLSRCH_WRK_INSTRUCTION_MODE$12=&SSR_CLSRCH_WRK_CAMPUS$13=' \\"
     return queryString
 
 #extract class list(s)
-def createSearchCommand(state, dept, splitSearch, ICSID):
+def createSearchCommand(term, state, dept, splitSearch, ICSID):
     stateNum = state + 1
 
     if not splitSearch:
         command = open("COMP_search_curl.sh", "r").read().splitlines()
-        command[-2] = makeDeptQuery(stateNum, ICSID, dept, 0)
+        command[-2] = makeDeptQuery(term, stateNum, ICSID, dept, 0)
         dept_search_file = "working_files/"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
         for line in command:
@@ -105,7 +105,7 @@ def createSearchCommand(state, dept, splitSearch, ICSID):
         new_command_file.close()
     else:
         command = open("COMP_search_curl.sh", "r").read().splitlines()
-        command[-2] = makeDeptQuery(stateNum, ICSID, dept, 2)
+        command[-2] = makeDeptQuery(term, stateNum, ICSID, dept, 2)
         dept_search_file = "working_files/second_"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
         for line in command:
@@ -113,7 +113,7 @@ def createSearchCommand(state, dept, splitSearch, ICSID):
         new_command_file.close()
 
         command = open("COMP_search_curl.sh", "r").read().splitlines()
-        command[-2] = makeDeptQuery(stateNum, ICSID, dept, 1)
+        command[-2] = makeDeptQuery(term, stateNum, ICSID, dept, 1)
         dept_search_file = "working_files/"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
         for line in command:
@@ -217,11 +217,12 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
 
 term = "fall 2022"
 term_folder = "fall2022"
+term_query_string = "2229"
 dept_search_file = "COMP_search_curl.sh"
 notes_file = "notes.txt"
 names_file = "names.txt"
-notes = getCustomNotes(notes_file)
-names = getCustomNames(names_file)
+notes = getCustomNotes(term_folder+"/"+notes_file)
+names = getCustomNames(term_folder+"/"+names_file)
 
 #extract ICSID from the curl used for the search
 dept_search = open(dept_search_file, "r").read().splitlines()
@@ -252,7 +253,7 @@ for dept in dept_list:
 
     print("starting to get data for "+dept)
 
-    dept_search_file = createSearchCommand(stateNum, dept, bigDept, ICSID)
+    dept_search_file = createSearchCommand(term_query_string, stateNum, dept, bigDept, ICSID)
 
     numClasses = startClassList(dept_search_file)
 
