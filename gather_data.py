@@ -7,11 +7,12 @@ from bs4 import BeautifulSoup
 
 ###NOTE: to run this script, you need to do the following steps:
 #1) create working_files directory next to script
-#2) log in to connectcarolina on Chromium (must be a fresh login)
+#2) log in to connectcarolina on Chromium (or use an existing session)
 #3) go to course search, and press F12 to open developer tools. Click on network tab
 #4) select a term on the term dropdown at the top of the search.
 #5) right click on the resulting POST request and select copy as curl. 
 #6) paste contents into COMP_search_curl.sh in SAME DIRECTORY as script
+### you can also call the repeat.sh script to have this script run in a loop
 
 #currently output text assumes searches for fall 2022 classes numbered under 999 with meeting time on any day of week
 #fails if there are too many results
@@ -83,8 +84,8 @@ def makeDeptQuery(stateNum, ICSID, dept, bigState):
     return queryString
 
 #extract class list(s)
-def createSearchCommand(dept, splitSearch, ICSID):
-    stateNum = 3
+def createSearchCommand(state, dept, splitSearch, ICSID):
+    stateNum = state + 1
 
     if not splitSearch:
         command = open("COMP_search_curl.sh", "r").read().splitlines()
@@ -141,10 +142,10 @@ def startClassList(dept_search_file):
 
     return numClasses
 
-def addClassEntry(dept_search_file, ICSID, i, notes, names):
+def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     #form a class_search_curl.sh file by copying info from the dept search headers/cookies and modifying data
     class_search = open(dept_search_file, "r").read().splitlines()
-    StateNum = 4
+    StateNum = state + 2
     class_search[-2] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum="+str(StateNum)+"&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
 
     #write the class search to a file
@@ -214,13 +215,19 @@ names_file = "names.txt"
 notes = getCustomNotes(notes_file)
 names = getCustomNames(names_file)
 
-#extract ICSID from the curl used for the dept search
+#extract ICSID from the curl used for the search
 dept_search = open(dept_search_file, "r").read().splitlines()
 dept_search_data = dept_search[-2]
 start_ICSID = dept_search_data.find("ICSID=")
 end_ICSID = dept_search_data.find("&", start_ICSID)
 ICSID = dept_search_data[start_ICSID+6: end_ICSID]
 print("retrieved ICSID "+ICSID+"\n")
+#extract state number from the curl used for the search
+start_state = dept_search_data.find("ICStateNum=")
+end_state = dept_search_data.find("&", start_state)
+stateNum = int(dept_search_data[start_state+11:end_state])
+print("retrieved ICStateNum "+str(stateNum)+"\n")
+
 
 #Can include any dept where there are <130 courses listed with a number under 999
 #COMP needs to be first or there will be issues
@@ -237,7 +244,7 @@ for dept in dept_list:
 
     print("starting to get data for "+dept)
 
-    dept_search_file = createSearchCommand(dept, bigDept, ICSID)
+    dept_search_file = createSearchCommand(stateNum, dept, bigDept, ICSID)
 
     numClasses = startClassList(dept_search_file)
 
@@ -273,7 +280,7 @@ for dept in dept_list:
     #for each class
     for i in range(numClasses):
         time.sleep(.1) #avoid too many queries in a rush
-        html = html + addClassEntry(dept_search_file, ICSID, i, notes, names)
+        html = html + addClassEntry(stateNum, dept_search_file, ICSID, i, notes, names)
 
     #if this is a big dept, we need to repeat some of this work for the second file
     if bigDept:
@@ -283,7 +290,7 @@ for dept in dept_list:
         #for each class
         for i in range(numClasses):
             time.sleep(.1) #avoid too many queries in a rush
-            html = html + addClassEntry(dept_search_file, ICSID, i, notes, names)
+            html = html + addClassEntry(stateNum, dept_search_file, ICSID, i, notes, names)
 
         #if i % 10 == 0:
         #    print("processed class number " + str(i))
