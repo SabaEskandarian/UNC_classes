@@ -214,15 +214,18 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     return tableLines
 
 
-
-term = "fall 2022"
-term_folder = "fall2022"
-term_query_string = "2229"
-dept_search_file = "COMP_search_curl.sh"
+term_list = ["fall 2022"]
+term_folder_list = ["fall2022"]
+term_query_string_list = ["2229"]
+#term_list = ["fall 2022", "spring 2023"]
+#term_folder_list = ["fall2022", "spring2023"]
+#term_query_string_list = ["2229", "2232"]
+numTerms = len(term_list)
+termCounter = 0
 notes_file = "notes.txt"
 names_file = "names.txt"
-notes = getCustomNotes(term_folder+"/"+notes_file)
-names = getCustomNames(term_folder+"/"+names_file)
+
+dept_search_file = "COMP_search_curl.sh"
 
 #extract ICSID from the curl used for the search
 dept_search = open(dept_search_file, "r").read().splitlines()
@@ -237,82 +240,94 @@ end_state = dept_search_data.find("&", start_state)
 stateNum = int(dept_search_data[start_state+11:end_state])
 print("retrieved ICStateNum "+str(stateNum)+"\n")
 
+while termCounter < numTerms:
 
-#Can include any dept where there are <130 courses listed with a number under 999
-#COMP needs to be first or there will be issues
-dept_list = ["COMP", "AAAD", "AMST", "BIOS", "COMM", "DRAM", "EDUC", "HIST", "MATH", "STOR", "WGST"]
-#any department where there are <130 courses under 500 and another <130 listed over 500
-#needs to go in both dept_list and large_dept_list
-large_dept_list = ["HIST","MATH"]
+    term = term_list[termCounter]
+    term_folder = term_folder_list[termCounter]
+    term_query_string = term_query_string_list[termCounter]
 
-for dept in dept_list:
+    notes = getCustomNotes(term_folder+"/"+notes_file)
+    names = getCustomNames(term_folder+"/"+names_file)
 
-    bigDept = False
-    if dept in large_dept_list:
-        bigDept = True
+    #Can include any dept where there are <130 courses listed with a number under 999
+    #COMP needs to be first or there will be issues
+    dept_list = ["COMP", "AAAD", "AMST", "BIOS", "COMM", "DRAM", "EDUC", "HIST", "MATH", "STOR", "WGST"]
+    #any department where there are <130 courses under 500 and another <130 listed over 500
+    #needs to go in both dept_list and large_dept_list
+    large_dept_list = ["HIST","MATH"]
 
-    print("starting to get data for "+dept)
+    for dept in dept_list:
 
-    dept_search_file = createSearchCommand(term_query_string, stateNum, dept, bigDept, ICSID)
+        bigDept = False
+        if dept in large_dept_list:
+            bigDept = True
 
-    numClasses = startClassList(dept_search_file)
+        print("starting to get data for "+dept)
 
-    #open/read the HTML template into a string.
-    html = open("page_template.html", "r").read()
+        dept_search_file = createSearchCommand(term_query_string, stateNum, dept, bigDept, ICSID)
 
-    #text at top of page
-
-    html = html + "<h1>"+dept+" Courses</h1>\n\n"
-
-    html = html + "<p>Here is information about "+dept+" class enrollment for <strong>"+term+"</strong>. Classes with no meeting time listed are not shown. Feel free to <a href='https://cs.unc.edu/~saba'>contact me</a> with any questions/comments/issues.</p>\n\n"
-
-    html = html + "<p><strong>Click <a id='show'>here</a> to show class descriptions</strong>. Click <a id='hide'>here</a> to hide them.</p>\n\n"
-
-    html = html + "<script src='../choose_term.js'></script>\n"
-
-    html = html + "<p> Data also available for: <a href='index.html'>COMP</a>"
-
-    for item in dept_list:
-        if item == "COMP":
-            continue
-        html = html + ", <a href='"+item+"_classes.html'>"+item+"</a>"
-
-    html = html + "</p>\n"
-
-    #get timestamp for start of search
-    timestamp = datetime.datetime.now()
-    html = html + "<p>Data last updated: "+str(timestamp)+"</p>\n"
-
-    #beginning of table
-    html = html + "<table>\n<tr>\n<th>Class Number</th>\n<th>Class</th>\n<th>Meeting Time</th>\n<th>Instructor</th>\n<th>Room</th>\n<th>Enrollment</th>\n<th>Wait List</th>\n</tr>\n"
-
-    #for each class
-    for i in range(numClasses):
-        time.sleep(.1) #avoid too many queries in a rush
-        html = html + addClassEntry(stateNum, dept_search_file, ICSID, i, notes, names)
-
-    #if this is a big dept, we need to repeat some of this work for the second file
-    if bigDept:
-        #messy
-        dept_search_file = "working_files/second_"+dept+"_search_curl.sh"
         numClasses = startClassList(dept_search_file)
+
+        #open/read the HTML template into a string.
+        html = open("page_template.html", "r").read()
+
+        #text at top of page
+
+        html = html + "<h1>"+dept+" Courses</h1>\n\n"
+
+        html = html + "<p>Here is information about "+dept+" class enrollment for <strong>"+term+"</strong>. Classes with no meeting time listed are not shown. Feel free to <a href='https://cs.unc.edu/~saba'>contact me</a> with any questions/comments/issues.</p>\n\n"
+
+        html = html + "<p><strong>Click <a id='show'>here</a> to show class descriptions</strong>. Click <a id='hide'>here</a> to hide them.</p>\n\n"
+
+        html = html + "<script src='../choose_term.js'></script>\n"
+
+        html = html + "<p> Data also available for: <a href='index.html'>COMP</a>"
+
+        for item in dept_list:
+            if item == "COMP":
+                continue
+            html = html + ", <a href='"+item+"_classes.html'>"+item+"</a>"
+
+        html = html + "</p>\n"
+
+        #get timestamp for start of search
+        timestamp = datetime.datetime.now()
+        html = html + "<p>Data last updated: "+str(timestamp)+"</p>\n"
+
+        #beginning of table
+        html = html + "<table>\n<tr>\n<th>Class Number</th>\n<th>Class</th>\n<th>Meeting Time</th>\n<th>Instructor</th>\n<th>Room</th>\n<th>Enrollment</th>\n<th>Wait List</th>\n</tr>\n"
+
         #for each class
         for i in range(numClasses):
             time.sleep(.1) #avoid too many queries in a rush
             html = html + addClassEntry(stateNum, dept_search_file, ICSID, i, notes, names)
 
-        #if i % 10 == 0:
-        #    print("processed class number " + str(i))
+        #if this is a big dept, we need to repeat some of this work for the second file
+        if bigDept:
+            #messy
+            dept_search_file = "working_files/second_"+dept+"_search_curl.sh"
+            numClasses = startClassList(dept_search_file)
+            #for each class
+            for i in range(numClasses):
+                time.sleep(.1) #avoid too many queries in a rush
+                html = html + addClassEntry(stateNum, dept_search_file, ICSID, i, notes, names)
 
-    #add HTML end stuff and write to file
-    html = html + "\n</table>\n</body>\n</html>"
-    outFileName = "index.html"
-    if dept != "COMP":
-        outFileName = dept+"_classes.html"
-    outFile = open("working_files/"+outFileName, "w")
-    outFile.write(html)
-    outFile.close()
+            #if i % 10 == 0:
+            #    print("processed class number " + str(i))
 
-    subprocess.run(["cp", "working_files/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/COMP_classes/"+term_folder+"/"+outFileName])
-    print("done with "+dept+"!")
+        #add HTML end stuff and write to file
+        html = html + "\n</table>\n</body>\n</html>"
+        outFileName = "index.html"
+        if dept != "COMP":
+            outFileName = dept+"_classes.html"
+        outFile = open("working_files/"+outFileName, "w")
+        outFile.write(html)
+        outFile.close()
+
+        subprocess.run(["cp", "working_files/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/COMP_classes/"+term_folder+"/"+outFileName])
+        print("done with "+dept+"!")
+
+    termCounter += 1
+    print("done with term "+term+"!")
+
 print("done!")
