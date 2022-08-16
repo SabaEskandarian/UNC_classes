@@ -70,7 +70,13 @@ def getContentById(targetId, data):
         print("couldn't find match for id "+targetId+"!\n")
 
     soup = BeautifulSoup(relevantData, 'html.parser')
-    return str(soup.find(id=targetId).string).replace(u'\xa0', u'&nbsp;')
+    retString = str(soup.find(id=targetId).string).replace(u'\xa0', u'&nbsp;')
+    
+    #For the edge case where instructor is None because of formatting, say multiple
+    if retString == "None" and targetId == "MTG_INSTR$0":
+    	retString = "Multiple"
+    	
+    return retString
     
 #bigState 0 is normal dept, 1 is first part of big dept, 2 is second part of big dept
 def makeDeptQuery(stateNum, ICSID, dept, bigState):
