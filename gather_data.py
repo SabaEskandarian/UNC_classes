@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 #1) create working_files directory next to script
 #2) log in to connectcarolina on Chromium (must be a fresh login)
 #3) go to course search, and press F12 to open developer tools. Click on network tab
-#4) search for COMP classes in Fall 2022 with course number <=500, uncheck box about only searching for open classes
+#4) select a term on the term dropdown at the top of the search.
 #5) right click on the resulting POST request and select copy as curl. 
 #6) paste contents into COMP_search_curl.sh in SAME DIRECTORY as script
 
@@ -84,7 +84,7 @@ def makeDeptQuery(stateNum, ICSID, dept, bigState):
 
 #extract class list(s)
 def createSearchCommand(dept, splitSearch, ICSID):
-    stateNum = 4
+    stateNum = 3
 
     if not splitSearch:
         command = open("COMP_search_curl.sh", "r").read().splitlines()
@@ -144,7 +144,7 @@ def startClassList(dept_search_file):
 def addClassEntry(dept_search_file, ICSID, i, notes, names):
     #form a class_search_curl.sh file by copying info from the dept search headers/cookies and modifying data
     class_search = open(dept_search_file, "r").read().splitlines()
-    StateNum = 5
+    StateNum = 4
     class_search[-2] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum="+str(StateNum)+"&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
 
     #write the class search to a file
