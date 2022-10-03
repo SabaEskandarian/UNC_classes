@@ -55,6 +55,20 @@ def getCustomNames(namesFileName):
         names[classNameStr] = newName
     #print(notes)
     return names
+    
+def getColoredTD(enrollmentFractionString):
+    nums = enrollmentFractionString.split('/')
+    tdString = "<td>"
+    if int(nums[1]) > 0 and float(nums[0]) / float(nums[1]) > .9:
+        tdString = "<td style='color:orange'>"
+    if int(nums[1]) > 0 and int(nums[0]) >= int(nums[1]):
+        tdString = "<td style='color:red'>"
+    return tdString
+
+#switch string from open/total format to enrollment/total format
+def correctEnrollment(enrollmentString):
+    nums = enrollmentString.split('/')
+    return str(int(nums[1])-int(nums[0]))+"/"+nums[1]
 
 def getContentById(targetId, data):
     relevantData = ""
@@ -73,8 +87,8 @@ def getContentById(targetId, data):
     #For the edge case where instructor is None because of formatting, say multiple
     #TODO actually parse the multiple instructors' names
     if retString == "None" and targetId == "MTG_INSTR$0":
-    	retString = "Multiple"
-    	
+        retString = "Multiple"
+
     return retString
     
 #bigState 0 is normal dept, 1 is first part of big dept, 2 is second part of big dept
@@ -182,10 +196,9 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     classTime = getContentById("MTG_SCHED$0", classRawData)
     instructor = getContentById("MTG_INSTR$0", classRawData)
     room = getContentById("MTG_LOC$0", classRawData)
-    enrollment = getContentById("SSR_CLS_DTL_WRK_ENRL_TOT", classRawData)
-    enrollmentMax = getContentById("SSR_CLS_DTL_WRK_ENRL_CAP", classRawData)
-    waitlist = getContentById("SSR_CLS_DTL_WRK_WAIT_TOT", classRawData)
-    waitlistMax = getContentById("SSR_CLS_DTL_WRK_WAIT_CAP", classRawData)
+    unresEnrollmentString = correctEnrollment(getContentById("NC_RC_OPEX_WRK_DESCR1$0", classRawData))
+    resEnrollmentString = correctEnrollment(getContentById("NC_RC_OPEX_WRK_DESCR1$1", classRawData))
+    waitlistString = correctEnrollment(getContentById("NC_RC_OPEX_WRK_DESCR1$311$$0", classRawData))
     description = getContentById("DERIVED_CLSRCH_DESCRLONG", classRawData)
     units = getContentById("SSR_CLS_DTL_WRK_UNITS_RANGE", classRawData)
 
@@ -196,12 +209,11 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     #    return ""
 
     #add html
-    enrollmentTD = "<td>"
-    #if class is full, make the enrollment red
-    if int(enrollment) >= int(enrollmentMax):
-        enrollmentTD = "<td style='color:red'>"
+    unresEnrollmentTD = getColoredTD(unresEnrollmentString)
+    resEnrollmentTD = getColoredTD(resEnrollmentString)
+    waitlistTD = getColoredTD(waitlistString)
 
-    tableLines = "<tr><td>"+classNum+"</td><td>"+className+"</td><td>"+classTime+"</td><td>"+instructor+"</td><td>"+room+"</td>"+enrollmentTD+enrollment+"/"+enrollmentMax+"</td><td>"+waitlist+"/"+waitlistMax+"</td></tr>\n<tr class='expandable'><td colspan=7><strong>Description: </strong>"+description+" "+units+"."
+    tableLines = "<tr><td>"+classNum+"</td><td>"+className+"</td><td>"+classTime+"</td><td>"+instructor+"</td><td>"+room+"</td>"+unresEnrollmentTD+unresEnrollmentString+"</td>"+resEnrollmentTD+resEnrollmentString+"</td>"+waitlistTD+waitlistString+"</td></tr>\n<tr class='expandable'><td colspan=7><strong>Description: </strong>"+description+" "+units+"."
 
     if classNum in notes:
         tableLines = tableLines + "\n<br /><strong>Notes:</strong> "+notes[classNum]
@@ -294,7 +306,7 @@ while termCounter < numTerms:
         html = html + "<p>Data last updated: "+str(timestamp)+"</p>\n"
 
         #beginning of table
-        html = html + "<table>\n<tr>\n<th>Class Number</th>\n<th>Class</th>\n<th>Meeting Time</th>\n<th>Instructor</th>\n<th>Room</th>\n<th>Enrollment</th>\n<th>Wait List</th>\n</tr>\n"
+        html = html + "<table>\n<tr>\n<th>Class Number</th>\n<th>Class</th>\n<th>Meeting Time</th>\n<th>Instructor</th>\n<th>Room</th>\n<th>Unreserved Enrollment</th>\n<th>Reserved Enrollment</th>\n<th>Wait List</th>\n</tr>\n"
 
         #for each class
         for i in range(numClasses):
