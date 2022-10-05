@@ -140,7 +140,14 @@ def logResponse(fileName, data):
 
 def startClassList(dept_search_file):
     #use curl to get class list
-    classListData = subprocess.run(["bash", dept_search_file], capture_output=True).stdout.decode("utf-8")
+    count = 0
+    classListData = ""
+    while classListData == "" and count < 5:
+        classListData = subprocess.run(["bash", dept_search_file], capture_output=True).stdout.decode("utf-8")
+        if classListData == "":
+            time.sleep(0.1)
+            print("couldn't get classListData, trying again\n")
+            count += 1
     #print("result of command: \n" + classListData)
     #classListData = open("class_list_res.html", "r").read()
     #save classListData to a temp file in working_files directory
