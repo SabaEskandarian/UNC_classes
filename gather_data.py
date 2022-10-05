@@ -77,7 +77,7 @@ def getContentById(targetId, data):
             relevantData = relevantData + line + "\n"
     if not relevantData:
         #don't want a crash if there is no description
-        if targetId == "DERIVED_CLSRCH_DESCRLONG":
+        if targetId == "DERIVED_CLSRCH_DESCRLONG" or targetId == "SSR_CLS_DTL_WRK_CLASS_NBR":
             return ""
         print("couldn't find match for id "+targetId+"!\n")
 
@@ -186,17 +186,21 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     classRawData = ""
     while classRawData == "" and count < 5:
         classRawData = subprocess.run(["bash", class_file_name], capture_output=True).stdout.decode("utf-8")
+        #save classRawData to a temp file in working_files directory
+        logResponse("working_files/class_response.txt", classRawData)
         if classRawData == "":
             time.sleep(0.1)
             print("couldn't get classRawData, trying again\n")
             count += 1
-    
-    #save classRawData to a temp file in working_files directory
-    logResponse("working_files/class_response.txt", classRawData)
+        else:
+            classNum = getContentById("SSR_CLS_DTL_WRK_CLASS_NBR", classRawData)
+            if classNum == "":
+                time.sleep(0.1)
+                print("couldn't get classNum, trying again\n")
+                classRawData = ""
+                count += 1
 
-    #print(classRawData)
     #parse class data, output html
-    classNum = getContentById("SSR_CLS_DTL_WRK_CLASS_NBR", classRawData)
     className = getContentById("DERIVED_CLSRCH_DESCR200", classRawData)
     if className in names:
         className = names[className]
