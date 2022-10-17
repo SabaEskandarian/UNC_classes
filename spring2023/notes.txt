@@ -9,7 +9,7 @@ Prerequisites, COMP 301 and COMP 211. Registration request: https://bit.ly/comp5
 11725
 Prerequisites, COMP 301, COMP 211, and COMP 562 (or other machine learning course). Self-registration.
 11958
-Prerequisites, COMP 301 and COMP 311. Self-registration. Course website: https://www.cs.unc.edu/~saba/priv_class/index.html
+Prerequisites, COMP 283, COMP 210, COMP 211, and COMP 301 (or their equivalents). Self-registration. Course website: https://www.cs.unc.edu/~saba/priv_class/index.html
 13478
 Prerequisites, COMP 301 and COMP 211. Self-registration.
 14446
