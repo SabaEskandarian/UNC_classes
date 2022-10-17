@@ -1,2 +1,16 @@
+10207
+Prerequisites, COMP 301 and COMP 311. Self-registration.
+12217
+Instructor permission required. For more information, see https://docs.google.com/document/d/1MUDD6y7y2y87DssPeLU_wmlPwkJs3LYzFjDjqzfaHJU/edit#heading=h.h8vorb0okj2
+13476
+Prerequisites, COMP 301 and COMP 211. Self-registration.
+13477
+Prerequisites, COMP 301 and COMP 211. Registration request: https://bit.ly/comp590-kj-23s
+11725
+Prerequisites, COMP 301, COMP 211, and COMP 562 (or other machine learning course). Self-registration.
 11958
-course website: https://www.cs.unc.edu/~saba/pets_class/index.html
+Prerequisites, COMP 301 and COMP 311. Self-registration. Course website: https://www.cs.unc.edu/~saba/pets_class/index.html
+13478
+Prerequisites, COMP 301 and COMP 211. Self-registration.
+14446
+Prerequisites, COMP 301, COMP 311, MATH 233, and MATH 347. Self-registration.
