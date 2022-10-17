@@ -9,10 +9,10 @@ COMP&nbsp; 590 - 140&nbsp;&nbsp; Special Topics: Foundations of Software Enginee
 COMP&nbsp; 590 - 158&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 158&nbsp;&nbsp; Special Topics: Natural Language Processing
 COMP&nbsp; 590 - 171&nbsp;&nbsp; Topics in Computer Science
-COMP&nbsp; 590 - 171&nbsp;&nbsp; Special Topics: Privacy Enhancing Technologies
+COMP&nbsp; 590 - 171&nbsp;&nbsp; Special Topics: Privacy Preserving Technologies
 COMP&nbsp; 590 - 173&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 173&nbsp;&nbsp; Special Topics: Visualization Design Methods
 COMP&nbsp; 590 - 177&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 177&nbsp;&nbsp; Special Topics: Computer Vision in the 3D World
 COMP&nbsp; 790 - 171&nbsp;&nbsp; Topics in Computer Science
-COMP&nbsp; 790 - 171&nbsp;&nbsp; Special Topics: Privacy Enhancing Technologies
+COMP&nbsp; 790 - 171&nbsp;&nbsp; Special Topics: Privacy Preserving Technologies
