@@ -14,7 +14,6 @@ from bs4 import BeautifulSoup
 #6) paste contents into COMP_search_curl.sh in SAME DIRECTORY as script
 ### you can also call the repeat.sh script to have this script run in a loop
 
-#currently output text assumes searches for fall 2022 classes numbered under 999 with meeting time on any day of week
 #fails if there are too many results
 
 #TODO: assumes only 1 URL per note.
@@ -237,9 +236,9 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
 #term_list = ["fall 2022"]
 #term_folder_list = ["fall2022"]
 #term_query_string_list = ["2229"]
-term_list = ["fall 2022", "spring 2023"]
-term_folder_list = ["fall2022", "spring2023"]
-term_query_string_list = ["2229", "2232"]
+term_list = ["spring 2023"]
+term_folder_list = ["spring2023"]
+term_query_string_list = ["2232"]
 numTerms = len(term_list)
 termCounter = 0
 notes_file = "notes.txt"
