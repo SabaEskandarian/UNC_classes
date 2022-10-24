@@ -142,7 +142,7 @@ def startClassList(dept_search_file):
     count = 0
     numClasses = 0
     classListData = ""
-    while classListData == "" and count < 5:
+    while (classListData == "" or numClasses == 0) and count < 5:
         classListData = subprocess.run(["bash", dept_search_file], capture_output=True).stdout.decode("utf-8")
         if classListData == "":
             time.sleep(0.5)
@@ -158,7 +158,6 @@ def startClassList(dept_search_file):
         if numClasses == 0:
             time.sleep(0.5)
             print("no classes, trying again\n")
-            classListData = ""
             count += 1
             
             
