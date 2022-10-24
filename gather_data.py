@@ -144,7 +144,7 @@ def startClassList(dept_search_file):
     while classListData == "" and count < 5:
         classListData = subprocess.run(["bash", dept_search_file], capture_output=True).stdout.decode("utf-8")
         if classListData == "":
-            time.sleep(0.1)
+            time.sleep(0.3)
             print("couldn't get classListData, trying again\n")
             count += 1
     #print("result of command: \n" + classListData)
@@ -188,13 +188,13 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
         #save classRawData to a temp file in working_files directory
         logResponse("working_files/class_response.txt", classRawData)
         if classRawData == "":
-            time.sleep(0.1)
+            time.sleep(0.3)
             print("couldn't get classRawData, trying again\n")
             count += 1
         else:
             classNum = getContentById("SSR_CLS_DTL_WRK_CLASS_NBR", classRawData)
             if classNum == "":
-                time.sleep(0.1)
+                time.sleep(0.3)
                 print("couldn't get classNum, trying again\n")
                 classRawData = ""
                 count += 1
@@ -323,7 +323,7 @@ while termCounter < numTerms:
 
         #for each class
         for i in range(numClasses):
-            time.sleep(.1) #avoid too many queries in a rush
+            time.sleep(.3) #avoid too many queries in a rush
             html = html + addClassEntry(stateNum, dept_search_file, ICSID, i, notes, names)
 
         #if this is a big dept, we need to repeat some of this work for the second file
@@ -333,7 +333,7 @@ while termCounter < numTerms:
             numClasses = startClassList(dept_search_file)
             #for each class
             for i in range(numClasses):
-                time.sleep(.1) #avoid too many queries in a rush
+                time.sleep(.3) #avoid too many queries in a rush
                 html = html + addClassEntry(stateNum, dept_search_file, ICSID, i, notes, names)
 
             #if i % 10 == 0:
