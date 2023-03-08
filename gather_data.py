@@ -58,7 +58,11 @@ def getCustomNames(namesFileName):
 def getColoredTD(enrollmentFractionString):
     nums = enrollmentFractionString.split('/')
     tdString = "<td>"
-    if int(nums[1]) > 0 and float(nums[0]) / float(nums[1]) > .9:
+    if enrollmentFractionString == "Seats filled":
+        tdString = "<td style='color:red'>"
+    if len(nums) < 2:
+        return tdString
+    if int(nums[1]) > 0 and float(nums[0]) / float(nums[1]) > .85:
         tdString = "<td style='color:orange'>"
     if int(nums[1]) > 0 and int(nums[0]) >= int(nums[1]):
         tdString = "<td style='color:red'>"
@@ -67,27 +71,35 @@ def getColoredTD(enrollmentFractionString):
 #switch string from open/total format to enrollment/total format
 def correctEnrollment(enrollmentString):
     nums = enrollmentString.split('/')
+    if len(nums) < 2:
+        return enrollmentString
     return str(int(nums[1])-int(nums[0]))+"/"+nums[1]
 
 def getContentById(targetId, data):
     relevantData = ""
-    for line in data.splitlines():
+    lines = data.splitlines();
+    count = 0;
+    while count < len(lines):
+        line = lines[count]
         if targetId in line:
             relevantData = relevantData + line + "\n"
+            while not ("/span" in line):
+                count = count + 1
+                line = lines[count]
+                relevantData = relevantData + line + "\n"
+        count = count + 1
     if not relevantData:
         #don't want a crash if there is no description
         if targetId == "DERIVED_CLSRCH_DESCRLONG" or targetId == "SSR_CLS_DTL_WRK_CLASS_NBR":
             return ""
         print("couldn't find match for id "+targetId+"!\n")
-
-    soup = BeautifulSoup(relevantData, 'html.parser')
-    retString = str(soup.find(id=targetId).string).replace(u'\xa0', u'&nbsp;')
     
-    #For the edge case where instructor is None because of formatting, say multiple
-    #TODO actually parse the multiple instructors' names
-    if retString == "None" and targetId == "MTG_INSTR$0":
-        retString = "Multiple"
-
+    soup = BeautifulSoup(relevantData, 'html.parser')
+    if targetId == "MTG_INSTR$0":
+        retString = str(soup.find(id=targetId).get_text()).replace(",", ",<br />")
+    else:
+        retString = str(soup.find(id=targetId).string).replace(u'\xa0', u'&nbsp;')
+    
     return retString
     
 #bigState 0 is normal dept, 1 is first part of big dept, 2 is second part of big dept
@@ -239,12 +251,12 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     return tableLines
 
 
-#term_list = ["fall 2022"]
-#term_folder_list = ["fall2022"]
+#term_list = ["spring 2023"]
+#term_folder_list = ["spring2023"]
 #term_query_string_list = ["2229"]
-term_list = ["spring 2023"]
-term_folder_list = ["spring2023"]
-term_query_string_list = ["2232"]
+term_list = ["fall 2023"]
+term_folder_list = ["fall2023"]
+term_query_string_list = ["2239"]
 numTerms = len(term_list)
 termCounter = 0
 notes_file = "notes.txt"
