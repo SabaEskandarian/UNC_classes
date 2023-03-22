@@ -4,3 +4,5 @@ COMP&nbsp; 590 - 148&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 148&nbsp;&nbsp; Special Topics: Programming Intelligent Physical Systems
 COMP&nbsp; 790 - 148&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 148&nbsp;&nbsp; Special Topics: Programming Intelligent Physical Systems
+COMP&nbsp; 590 - 177&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 590 - 177&nbsp;&nbsp; Special Topics: Computer Vision in our 3D World
