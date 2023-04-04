@@ -227,6 +227,7 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     unresEnrollmentString = correctEnrollment(getContentById("NC_RC_OPEX_WRK_DESCR1$0", classRawData))
     resEnrollmentString = correctEnrollment(getContentById("NC_RC_OPEX_WRK_DESCR1$1", classRawData))
     waitlistString = correctEnrollment(getContentById("NC_RC_OPEX_WRK_DESCR1$311$$0", classRawData))
+    totalSeatsString = getContentById("NC_RC_OPEX_WRK_DESCR1$2", classRawData)
     description = getContentById("DERIVED_CLSRCH_DESCRLONG", classRawData)
     units = getContentById("SSR_CLS_DTL_WRK_UNITS_RANGE", classRawData)
 
@@ -240,6 +241,9 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     unresEnrollmentTD = getColoredTD(unresEnrollmentString)
     resEnrollmentTD = getColoredTD(resEnrollmentString)
     waitlistTD = getColoredTD(waitlistString)
+
+    if unresEnrollmentString == "Seats filled":
+        unresEnrollmentString = unresEnrollmentString + " ("+totalSeatsString+" total)"
 
     tableLines = "<tr><td>"+classNum+"</td><td>"+className+"</td><td>"+classTime+"</td><td>"+instructor+"</td><td>"+room+"</td>"+unresEnrollmentTD+unresEnrollmentString+"</td>"+resEnrollmentTD+resEnrollmentString+"</td>"+waitlistTD+waitlistString+"</td></tr>\n<tr class='expandable'><td colspan=7><strong>Description: </strong>"+description+" "+units+"."
 
