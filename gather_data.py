@@ -242,7 +242,7 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     resEnrollmentTD = getColoredTD(resEnrollmentString)
     waitlistTD = getColoredTD(waitlistString)
 
-    if unresEnrollmentString == "Seats filled":
+    if unresEnrollmentString == "Seats filled" or resEnrollmentString == "Seats filled":
         unresEnrollmentString = unresEnrollmentString + " ("+totalSeatsString+" total)"
 
     tableLines = "<tr><td>"+classNum+"</td><td>"+className+"</td><td>"+classTime+"</td><td>"+instructor+"</td><td>"+room+"</td>"+unresEnrollmentTD+unresEnrollmentString+"</td>"+resEnrollmentTD+resEnrollmentString+"</td>"+waitlistTD+waitlistString+"</td></tr>\n<tr class='expandable'><td colspan=7><strong>Description: </strong>"+description+" "+units+"."
