@@ -377,7 +377,7 @@ while termCounter < numTerms:
         outFile.write(html)
         outFile.close()
 
-        subprocess.run(["cp", "working_files/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/COMP_classes/"+term_folder+"/"+outFileName])
+        subprocess.run(["cp", "working_files/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/UNC_classes/"+term_folder+"/"+outFileName])
         print("done with "+dept+"!")
 
     termCounter += 1
