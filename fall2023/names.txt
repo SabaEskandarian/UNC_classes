@@ -1,12 +1,22 @@
+COMP&nbsp; 590 - 059&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 590 - 059&nbsp;&nbsp; Special Topics: Programming Methods, Models, Languages, and Analysis
 COMP&nbsp; 590 - 140&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 140&nbsp;&nbsp; Special Topics: Foundations of Software Engineering
 COMP&nbsp; 590 - 148&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 148&nbsp;&nbsp; Special Topics: Programming Intelligent Physical Systems
 COMP&nbsp; 790 - 148&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 148&nbsp;&nbsp; Special Topics: Programming Intelligent Physical Systems
+COMP&nbsp; 590 - 170&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 590 - 170&nbsp;&nbsp; Special Topics: Video Recognition
+COMP&nbsp; 790 - 170&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 790 - 170&nbsp;&nbsp; Special Topics: Video Recognition
 COMP&nbsp; 590 - 173&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 173&nbsp;&nbsp; Special Topics: Visualization Design Methods
 COMP&nbsp; 790 - 173&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 173&nbsp;&nbsp; Special Topics: Visualization Design Methods
 COMP&nbsp; 590 - 177&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 177&nbsp;&nbsp; Special Topics: Computer Vision in our 3D World
+COMP&nbsp; 790 - 149&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 790 - 149&nbsp;&nbsp; Research Topics in Computer Security
+COMP&nbsp; 790 - 150&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 790 - 150&nbsp;&nbsp; Reliable Machine Learning
