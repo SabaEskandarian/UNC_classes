@@ -14,9 +14,13 @@ COMP&nbsp; 590 - 173&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 173&nbsp;&nbsp; Special Topics: Visualization Design Methods
 COMP&nbsp; 790 - 173&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 173&nbsp;&nbsp; Special Topics: Visualization Design Methods
+COMP&nbsp; 590 - 178&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 590 - 178&nbsp;&nbsp; Special Topics: Introduction to VR and 3D Graphics
 COMP&nbsp; 590 - 177&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 590 - 177&nbsp;&nbsp; Special Topics: Computer Vision in our 3D World
 COMP&nbsp; 790 - 149&nbsp;&nbsp; Topics in Computer Science
-COMP&nbsp; 790 - 149&nbsp;&nbsp; Research Topics in Computer Security
+COMP&nbsp; 790 - 149&nbsp;&nbsp; Special Topics: Research Topics in Computer Security
 COMP&nbsp; 790 - 150&nbsp;&nbsp; Topics in Computer Science
-COMP&nbsp; 790 - 150&nbsp;&nbsp; Reliable Machine Learning
+COMP&nbsp; 790 - 150&nbsp;&nbsp; Special Topics: Reliable Machine Learning
+COMP&nbsp; 790 - 178&nbsp;&nbsp; Topics in Computer Science
+COMP&nbsp; 790 - 178&nbsp;&nbsp; Special Topics: Introduction to VR and 3D Graphics
