@@ -299,7 +299,7 @@ while termCounter < numTerms:
     #any department where there are <130 courses under 500 and another <130 listed over 500
     #needs to go in both dept_list and large_dept_list
     large_dept_list = ["BIOL","CHEM","MATH"]
-    large_dept_cutoffs = [500, 400, 500]
+    large_dept_cutoffs = [500, 250, 500]
 
     if "summer" in term:
         dept_list = ["COMP","AMST", "COMM", "MATH", "STOR"]
