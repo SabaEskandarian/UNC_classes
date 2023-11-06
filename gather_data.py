@@ -261,9 +261,9 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
 #term_list = ["summer I 2023", "summer II 2023"]
 #term_folder_list = ["summerI2023", "summerII2023"]
 #term_query_string_list = ["2233", "2234"]
-term_list = ["spring 2024", "fall 2023"]
-term_folder_list = ["spring2024","fall2023"]
-term_query_string_list = ["2242", "2239"]
+term_list = ["spring 2024"]
+term_folder_list = ["spring2024"]
+term_query_string_list = ["2242"]
 numTerms = len(term_list)
 termCounter = 0
 notes_file = "notes.txt"
@@ -295,11 +295,11 @@ while termCounter < numTerms:
 
     #Can include any dept where there are <130 courses listed with a number under 999
     #COMP needs to be first or there will be issues
-    dept_list = ["COMP", "AAAD", "AMST", "APPL", "BIOL", "BIOS", "BMME", "CHEM", "CMPL", "COMM", "DRAM", "EDUC", "EPID", "INLS", "MATH", "MEJO", "PHIL", "PSYC", "STOR", "WGST"]
+    dept_list = ["COMP", "AAAD", "AMST", "APPL", "BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CMPL", "COMM", "DRAM", "ECON", "EDUC", "ENGL", "EPID", "GEOG", "INLS", "LING", "MATH", "MEJO", "PHIL", "POLI", "PSYC", "SOCI", "STOR", "WGST"]
     #any department where there are <130 courses under 500 and another <130 listed over 500
     #needs to go in both dept_list and large_dept_list
-    large_dept_list = ["BIOL","CHEM","MATH"]
-    large_dept_cutoffs = [500, 250, 500]
+    large_dept_list = ["BIOL","CHEM","ENGL","MATH"]
+    large_dept_cutoffs = [500, 250, 200, 500]
 
     if "summer" in term:
         dept_list = ["COMP","AMST", "COMM", "MATH", "STOR"]
