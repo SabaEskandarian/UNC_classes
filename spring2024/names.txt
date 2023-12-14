@@ -29,7 +29,7 @@ COMP&nbsp; 790 - 173&nbsp;&nbsp; Special Topics: Information Visualization
 COMP&nbsp; 790 - 175&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 175&nbsp;&nbsp; Special Topics: Computational Imaging and Displays
 COMP&nbsp; 790 - 177&nbsp;&nbsp; Topics in Computer Science
-COMP&nbsp; 790 - 177&nbsp;&nbsp; Special Topics: Neural Rendering
+COMP&nbsp; 790 - 177&nbsp;&nbsp; Special Topics: 3D Generative Models
 COMP&nbsp; 790 - 183&nbsp;&nbsp; Topics in Computer Science
 COMP&nbsp; 790 - 183&nbsp;&nbsp; Special Topics: Transfer Learning
 COMP&nbsp; 790 - 184&nbsp;&nbsp; Topics in Computer Science
