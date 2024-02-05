@@ -261,9 +261,9 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
 #term_list = ["summer I 2023", "summer II 2023"]
 #term_folder_list = ["summerI2023", "summerII2023"]
 #term_query_string_list = ["2233", "2234"]
-term_list = ["spring 2024"]
-term_folder_list = ["spring2024"]
-term_query_string_list = ["2242"]
+term_list = ["spring 2024", "summer I 2024", "summer II 2024"]
+term_folder_list = ["spring2024", "summerI2024", "summerII2024"]
+term_query_string_list = ["2242","2243","2244"]
 numTerms = len(term_list)
 termCounter = 0
 notes_file = "notes.txt"
