@@ -293,9 +293,10 @@ while termCounter < numTerms:
     notes = getCustomNotes(term_folder+"/"+notes_file)
     names = getCustomNames(term_folder+"/"+names_file)
 
+    #add back in BCB, GEOL later
     #Can include any dept where there are <130 courses listed with a number under 999
     #COMP needs to be first or there will be issues
-    dept_list = ["COMP", "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "DRAM", "ECON", "EDUC", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG", "GEOL", "HIST", "INLS", "LING", "MASC", "MATH", "MEJO", "PHIL", "PHYS", "PLAN", "PLCY", "POLI", "PSYC", "ROML", "SOCI", "STOR", "WGST"]
+    dept_list = ["COMP", "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "DRAM", "ECON", "EDUC", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG", "HIST", "INLS", "LING", "MASC", "MATH", "MEJO", "PHIL", "PHYS", "PLAN", "PLCY", "POLI", "PSYC", "ROML", "SOCI", "STOR", "WGST"]
     #any department where there are <130 courses under 500 and another <130 listed over 500
     #needs to go in both dept_list and large_dept_list
     large_dept_list = ["BIOL","CHEM","ENGL","MATH"]
