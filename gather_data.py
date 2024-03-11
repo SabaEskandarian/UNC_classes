@@ -261,12 +261,9 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
 #term_list = ["summer I 2023", "summer II 2023"]
 #term_folder_list = ["summerI2023", "summerII2023"]
 #term_query_string_list = ["2233", "2234"]
-#term_list = ["spring 2024", "summer I 2024", "summer II 2024"]
-#term_folder_list = ["spring2024", "summerI2024", "summerII2024"]
-#term_query_string_list = ["2242","2243","2244"]
-term_list = ["summer I 2024", "summer II 2024"]
-term_folder_list = ["summerI2024", "summerII2024"]
-term_query_string_list = ["2243","2244"]
+term_list = ["fall 2024", "summer I 2024", "summer II 2024"]
+term_folder_list = ["fall2024", "summerI2024", "summerII2024"]
+term_query_string_list = ["2249","2243","2244"]
 numTerms = len(term_list)
 termCounter = 0
 notes_file = "notes.txt"
@@ -298,7 +295,7 @@ while termCounter < numTerms:
 
     #Can include any dept where there are <130 courses listed with a number under 999
     #COMP needs to be first or there will be issues
-    dept_list = ["COMP", "AAAD", "AMST", "APPL", "BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CMPL", "COMM", "DRAM", "ECON", "EDUC", "ENGL", "EPID", "GEOG", "INLS", "LING", "MATH", "MEJO", "PHIL", "POLI", "PSYC", "SOCI", "STOR", "WGST"]
+    dept_list = ["COMP", "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BCB","BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "DRAM", "ECON", "EDUC", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG", "GEOL", "HIST", "INLS", "LING", "MASC", "MATH", "MEJO", "PHIL", "PHYS", "PLAN", "PLCY", "POLI", "PSYC", "ROML", "SOCI", "STOR", "WGST"]
     #any department where there are <130 courses under 500 and another <130 listed over 500
     #needs to go in both dept_list and large_dept_list
     large_dept_list = ["BIOL","CHEM","ENGL","MATH"]
@@ -331,7 +328,7 @@ while termCounter < numTerms:
 
         html = html + "<h1>"+dept+" Courses</h1>\n\n"
 
-        html = html + "<p>Here is information about "+dept+" class enrollment for <strong>"+term+"</strong>. Classes with no meeting time listed are not shown. Feel free to <a href='https://cs.unc.edu/~saba'>contact me</a> with any questions/comments/issues.</p>\n\n"
+        html = html + "<p>Here is information about "+dept+" class enrollment for <strong>"+term+"</strong>. Classes with no meeting time listed are not shown. Feel free to <a href='https://cs.unc.edu/~saba'>contact me</a> with any questions/comments/issues. I am happy to add any departments that are missing from these listings, just reach out to ask!</p>\n\n"
 
         html = html + "<p><strong>Click <a id='show'>here</a> to show class descriptions</strong>. Click <a id='hide'>here</a> to hide them.</p>\n\n"
 
@@ -376,11 +373,11 @@ while termCounter < numTerms:
         outFileName = "index.html"
         if dept != "COMP":
             outFileName = dept+"_classes.html"
-        outFile = open("working_files/"+outFileName, "w")
+        outFile = open("working_files/"+term_folder+"/"+outFileName, "w")
         outFile.write(html)
         outFile.close()
 
-        subprocess.run(["cp", "working_files/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/UNC_classes/"+term_folder+"/"+outFileName])
+        subprocess.run(["cp", "working_files/"+term_folder+"/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/UNC_classes/"+term_folder+"/"+outFileName])
         print("done with "+dept+"!")
 
     termCounter += 1
