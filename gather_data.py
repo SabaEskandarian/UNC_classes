@@ -15,45 +15,6 @@ from bs4 import BeautifulSoup
 ### you can also call the repeat.sh script to have this script run in a loop
 
 #fails if there are too many results
-
-#TODO: assumes only 1 URL per note.
-#notes.txt file contains pairs of lines where first line is class number and second line is any custom notes to appear after description.
-def getCustomNotes(notesFileName):
-    notes = {}
-    fileContents = open(notesFileName, "r")
-    while True:
-        classNumStr = fileContents.readline().strip()
-        if not classNumStr:
-            break
-        note = fileContents.readline().strip()
-        if not note:
-            break
-        url = ""
-        hasURL = False
-        for word in note.split():
-            if "https://" in word or "http://" in word:
-                hasURL = True
-                url = word
-        if hasURL:
-            note = note.replace(url, "<a href='"+url+"'>"+url+"</a>")
-        notes[classNumStr] = note
-    #print(notes)
-    return notes
-
-#names.txt file contains pairs of lines where first line is class name and second line is a custom name to replace the name. Use this to give names to CS special topics classes
-def getCustomNames(namesFileName):
-    names = {}
-    fileContents = open(namesFileName, "r")
-    while True:
-        classNameStr = fileContents.readline().strip()
-        if not classNameStr:
-            break
-        newName = fileContents.readline().strip()
-        if not newName:
-            break
-        names[classNameStr] = newName
-    #print(notes)
-    return names
     
 def getColoredTD(enrollmentFractionString):
     nums = enrollmentFractionString.split('/')
@@ -89,13 +50,16 @@ def getContentById(targetId, data):
                 relevantData = relevantData + line + "\n"
         count = count + 1
     if not relevantData:
-        #don't want a crash if there is no description
-        if targetId == "DERIVED_CLSRCH_DESCRLONG" or targetId == "SSR_CLS_DTL_WRK_CLASS_NBR":
+        #don't want a crash if there is no description or notes
+        if targetId == "DERIVED_CLSRCH_DESCRLONG" or targetId == "SSR_CLS_DTL_WRK_CLASS_NBR" or targetId == "DERIVED_CLSRCH_SSR_CLASSNOTE_LONG":
             return ""
         print("couldn't find match for id "+targetId+"!\n")
     
     soup = BeautifulSoup(relevantData, 'html.parser')
     if targetId == "MTG_INSTR$0":
+        retString = str(soup.find(id=targetId).get_text()).replace(",", ",<br />")
+    if targetId == "DERIVED_CLSRCH_SSR_CLASSNOTE_LONG":
+        print(relevantData+"\n")
         retString = str(soup.find(id=targetId).get_text()).replace(",", ",<br />")
     else:
         retString = str(soup.find(id=targetId).string).replace(u'\xa0', u'&nbsp;')
@@ -154,7 +118,7 @@ def startClassList(dept_search_file):
     count = 0
     numClasses = 0
     classListData = ""
-    while (classListData == "" or numClasses == 0) and count < 5:
+    while (classListData == "" or numClasses == 0) and count < 3:
         classListData = subprocess.run(["bash", dept_search_file], capture_output=True).stdout.decode("utf-8")
         if classListData == "":
             time.sleep(1)
@@ -181,11 +145,11 @@ def startClassList(dept_search_file):
     #abort if fail
     if numClasses == 0:
         print("wasn't able to find any classes")
-        sys.exit(1)
+        return -1
 
     return numClasses
 
-def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
+def addClassEntry(state, dept_search_file, ICSID, i):
     #form a class_search_curl.sh file by copying info from the dept search headers/cookies and modifying data
     class_search = open(dept_search_file, "r").read().splitlines()
     StateNum = state + 2
@@ -219,8 +183,6 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
 
     #parse class data, output html
     className = getContentById("DERIVED_CLSRCH_DESCR200", classRawData)
-    if className in names:
-        className = names[className]
     classTime = getContentById("MTG_SCHED$0", classRawData)
     instructor = getContentById("MTG_INSTR$0", classRawData)
     room = getContentById("MTG_LOC$0", classRawData)
@@ -230,25 +192,47 @@ def addClassEntry(state, dept_search_file, ICSID, i, notes, names):
     totalSeatsString = getContentById("NC_RC_OPEX_WRK_DESCR1$2", classRawData)
     description = getContentById("DERIVED_CLSRCH_DESCRLONG", classRawData)
     units = getContentById("SSR_CLS_DTL_WRK_UNITS_RANGE", classRawData)
+    
+    #extra work if this is a COMP class with a topic
+    if "COMP" in className and ("89 -" in className or "590 -" in className or "790 -" in className):
+        notes = getContentById("DERIVED_CLSRCH_SSR_CLASSNOTE_LONG", classRawData)
+        #get the desired title
+        specialTitleStart = notes.find("TITLE: ") + 7
+        specialTitleEnd = notes.find("<br")
+        #print(notes+"\n"+str(specialTitleStart)+" "+str(specialTitleEnd))
+        if specialTitleEnd == -1:
+        	specialTitleEnd == len(notes)
+        if specialTitleStart != 6:
+        	genericTitleStart = className.find("Topics in Computer Science")
+        	className = className[:genericTitleStart] +"Special Topics: "+ notes[specialTitleStart:specialTitleEnd]
+        
 
-    #if meeting time is TBA, instructor is Staff, and nobody's enrolled, this is probably not a real class
-    #NOTE: this is a heuristic, but I think it's a good choice for making the results less cluttered
-   #NOTE: commenting this out now that the search query itself does a better job of decluttering
-   #if classTime == "TBA" and instructor == "Staff" and int(enrollment) == 0:
-    #    return ""
+    #get the total enrollment
+    unresNums = unresEnrollmentString.split('/')
+    resNums = resEnrollmentString.split('/')
+    filledSeats = 0
+    if unresEnrollmentString == "Seats filled" and resEnrollmentString == "Seats filled":
+        filledSeats = int(totalSeatsString)
+    elif unresEnrollmentString != "Seats filled" and resEnrollmentString == "Seats filled":
+        filledSeats = int(totalSeatsString) - (int(unresNums[1]) - int(unresNums[0]))
+    elif unresEnrollmentString == "Seats filled" and resEnrollmentString != "Seats filled":
+        filledSeats = int(totalSeatsString) - (int(resNums[1]) - int(resNums[0]))
+    else:
+        filledSeats = int(unresNums[0]) + int(resNums[0])
+
+    totalEnrollmentString = str(filledSeats) + "/" + totalSeatsString
+	
+	
+	#nums = enrollmentString.split('/')
+    #if len(nums) < 2:
+    #    return enrollmentString
+    #return str(int(nums[1])-int(nums[0]))+"/"+nums[1]
 
     #add html
-    unresEnrollmentTD = getColoredTD(unresEnrollmentString)
-    resEnrollmentTD = getColoredTD(resEnrollmentString)
+    totalEnrollmentTD = getColoredTD(totalEnrollmentString)
     waitlistTD = getColoredTD(waitlistString)
 
-    if unresEnrollmentString == "Seats filled" or resEnrollmentString == "Seats filled":
-        unresEnrollmentString = unresEnrollmentString + " ("+totalSeatsString+" total)"
-
-    tableLines = "<tr><td>"+classNum+"</td><td>"+className+"</td><td>"+classTime+"</td><td>"+instructor+"</td><td>"+room+"</td>"+unresEnrollmentTD+unresEnrollmentString+"</td>"+resEnrollmentTD+resEnrollmentString+"</td>"+waitlistTD+waitlistString+"</td></tr>\n<tr class='expandable'><td colspan=7><strong>Description: </strong>"+description+" "+units+"."
-
-    if classNum in notes:
-        tableLines = tableLines + "\n<br /><strong>Notes:</strong> "+notes[classNum]
+    tableLines = "<tr><td>"+classNum+"</td><td>"+className+"</td><td>"+classTime+"</td><td>"+instructor+"</td><td>"+room+"</td><td>"+unresEnrollmentString+"</td><td>"+resEnrollmentString+"</td>"+totalEnrollmentTD+totalEnrollmentString+"</td>"+waitlistTD+waitlistString+"</td></tr>\n<tr class='expandable'><td colspan=7><strong>Description: </strong>"+description+" "+units+"."
 
     tableLines = tableLines + "</td></tr>\n"
 
@@ -266,8 +250,6 @@ term_folder_list = ["fall2024", "summerI2024", "summerII2024"]
 term_query_string_list = ["2249","2243","2244"]
 numTerms = len(term_list)
 termCounter = 0
-notes_file = "notes.txt"
-names_file = "names.txt"
 
 dept_search_file = "COMP_search_curl.sh"
 
@@ -290,13 +272,9 @@ while termCounter < numTerms:
     term_folder = term_folder_list[termCounter]
     term_query_string = term_query_string_list[termCounter]
 
-    notes = getCustomNotes(term_folder+"/"+notes_file)
-    names = getCustomNames(term_folder+"/"+names_file)
-
-    #add back in BCB, GEOL later
     #Can include any dept where there are <130 courses listed with a number under 999
     #COMP needs to be first or there will be issues
-    dept_list = ["COMP", "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "DRAM", "ECON", "EDUC", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG", "HIST", "INLS", "LING", "MASC", "MATH", "MEJO", "PHIL", "PHYS", "PLAN", "PLCY", "POLI", "PSYC", "ROML", "SOCI", "STOR", "WGST"]
+    dept_list = ["COMP", "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BCB", "BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "DRAM", "ECON", "EDUC", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG", "GEOL", "HIST", "INLS", "LING", "MASC", "MATH", "MEJO", "PHIL", "PHYS", "PLAN", "PLCY", "POLI", "PSYC", "ROML", "SOCI", "STOR", "WGST"]
     #any department where there are <130 courses under 500 and another <130 listed over 500
     #needs to go in both dept_list and large_dept_list
     large_dept_list = ["BIOL","CHEM","ENGL","MATH"]
@@ -307,6 +285,8 @@ while termCounter < numTerms:
         large_dept_list = []
 
     print("Starting term "+term)
+    
+    skipDeptCounter = 0
 
     for dept in dept_list:
 
@@ -321,6 +301,13 @@ while termCounter < numTerms:
         dept_search_file = createSearchCommand(term_query_string, stateNum, dept, bigDept, ICSID, bigCutoff)
 
         numClasses = startClassList(dept_search_file)
+        if numClasses == -1 and skipDeptCounter < 3:
+            skipDeptCounter += 1
+            print("skipping to next department\n")
+            continue
+        elif numClasses == -1:
+            print("something is wrong, giving up\n")
+            sys.exit(1)
 
         #open/read the HTML template into a string.
         html = open("page_template.html", "r").read()
@@ -349,22 +336,25 @@ while termCounter < numTerms:
         html = html + "<p>Data last updated: "+str(timestamp)+"</p>\n"
 
         #beginning of table
-        html = html + "<table>\n<tr>\n<th>Class Number</th>\n<th>Class</th>\n<th>Meeting Time</th>\n<th>Instructor</th>\n<th>Room</th>\n<th>Unreserved Enrollment</th>\n<th>Reserved Enrollment</th>\n<th>Wait List</th>\n</tr>\n"
+        html = html + "<table>\n<tr>\n<th>Class Number</th>\n<th>Class</th>\n<th>Meeting Time</th>\n<th>Instructor</th>\n<th>Room</th>\n<th>Unreserved Enrollment</th>\n<th>Reserved Enrollment</th>\n<th>Total Enrollment</th>\n<th>Wait List</th>\n</tr>\n"
 
         #for each class
         for i in range(numClasses):
             time.sleep(1) #avoid too many queries in a rush
-            html = html + addClassEntry(stateNum, dept_search_file, ICSID, i, notes, names)
+            html = html + addClassEntry(stateNum, dept_search_file, ICSID, i)
 
         #if this is a big dept, we need to repeat some of this work for the second file
         if bigDept:
             #messy
             dept_search_file = "working_files/second_"+dept+"_search_curl.sh"
             numClasses = startClassList(dept_search_file)
+            #if a big dept fails to find classes for the second file, give up
+            if numClasses == -1:
+                sys.exit(1)
             #for each class
             for i in range(numClasses):
                 time.sleep(1) #avoid too many queries in a rush
-                html = html + addClassEntry(stateNum, dept_search_file, ICSID, i, notes, names)
+                html = html + addClassEntry(stateNum, dept_search_file, ICSID, i)
 
             #if i % 10 == 0:
             #    print("processed class number " + str(i))
@@ -378,7 +368,8 @@ while termCounter < numTerms:
         outFile.write(html)
         outFile.close()
 
-        subprocess.run(["cp", "working_files/"+term_folder+"/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/UNC_classes/"+term_folder+"/"+outFileName])
+		#commenting out this copy operation because AFS isn't working right. Will have to manually copy over for now.
+        #subprocess.run(["cp", "working_files/"+term_folder+"/"+outFileName, "/afs/cs.unc.edu/home/saba/public_html/UNC_classes/"+term_folder+"/"+outFileName])
         print("done with "+dept+"!")
 
     termCounter += 1
