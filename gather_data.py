@@ -59,8 +59,8 @@ def getContentById(targetId, data):
     if targetId == "MTG_INSTR$0":
         retString = str(soup.find(id=targetId).get_text()).replace(",", ",<br />")
     if targetId == "DERIVED_CLSRCH_SSR_CLASSNOTE_LONG":
-        print(relevantData+"\n")
-        retString = str(soup.find(id=targetId).get_text()).replace(",", ",<br />")
+        #print(relevantData+"\n")
+        retString = soup.find(id=targetId).get_text(separator='\n')+"\n"
     else:
         retString = str(soup.find(id=targetId).string).replace(u'\xa0', u'&nbsp;')
     
@@ -83,7 +83,7 @@ def createSearchCommand(term, state, dept, splitSearch, ICSID, cutoff = 500):
 
     if not splitSearch:
         command = open("COMP_search_curl.sh", "r").read().splitlines()
-        command[-2] = makeDeptQuery(term, stateNum, ICSID, dept, 0)
+        command[-1] = makeDeptQuery(term, stateNum, ICSID, dept, 0)
         dept_search_file = "working_files/"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
         for line in command:
@@ -91,7 +91,7 @@ def createSearchCommand(term, state, dept, splitSearch, ICSID, cutoff = 500):
         new_command_file.close()
     else:
         command = open("COMP_search_curl.sh", "r").read().splitlines()
-        command[-2] = makeDeptQuery(term, stateNum, ICSID, dept, 2, cutoff)
+        command[-1] = makeDeptQuery(term, stateNum, ICSID, dept, 2, cutoff)
         dept_search_file = "working_files/second_"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
         for line in command:
@@ -99,7 +99,7 @@ def createSearchCommand(term, state, dept, splitSearch, ICSID, cutoff = 500):
         new_command_file.close()
 
         command = open("COMP_search_curl.sh", "r").read().splitlines()
-        command[-2] = makeDeptQuery(term, stateNum, ICSID, dept, 1, cutoff)
+        command[-1] = makeDeptQuery(term, stateNum, ICSID, dept, 1, cutoff)
         dept_search_file = "working_files/"+dept+"_search_curl.sh"
         new_command_file = open(dept_search_file, "w")
         for line in command:
@@ -153,7 +153,7 @@ def addClassEntry(state, dept_search_file, ICSID, i):
     #form a class_search_curl.sh file by copying info from the dept search headers/cookies and modifying data
     class_search = open(dept_search_file, "r").read().splitlines()
     StateNum = state + 2
-    class_search[-2] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum="+str(StateNum)+"&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
+    class_search[-1] = "  --data-raw 'ICAJAX=1&ICNAVTYPEDROPDOWN=1&ICType=Panel&ICElementNum=0&ICStateNum="+str(StateNum)+"&ICAction=MTG_CLASS_NBR%24"+str(i)+"&ICModelCancel=0&ICXPos=0&ICYPos=0&ResponsetoDiffFrame=-1&TargetFrameName=None&FacetPath=None&ICFocus=&ICSaveWarningFilter=0&ICChanged=-1&ICSkipPending=0&ICAutoSave=0&ICResubmit=0&ICSID="+ICSID+"&ICActionPrompt=false&ICBcDomData=&ICPanelName=&ICFind=&ICAddCount=&ICAppClsData=' \\"
 
     #write the class search to a file
     class_file_name = "working_files/class_search_curl.sh"
@@ -197,12 +197,10 @@ def addClassEntry(state, dept_search_file, ICSID, i):
     if "COMP" in className and ("89 -" in className or "590 -" in className or "790 -" in className):
         notes = getContentById("DERIVED_CLSRCH_SSR_CLASSNOTE_LONG", classRawData)
         #get the desired title
-        specialTitleStart = notes.find("TITLE: ") + 7
-        specialTitleEnd = notes.find("<br")
+        specialTitleStart = notes.find("TITLE:") + 7
+        specialTitleEnd = notes.find('\n')#getContentById makes sure it always ends with a \n
         #print(notes+"\n"+str(specialTitleStart)+" "+str(specialTitleEnd))
-        if specialTitleEnd == -1:
-        	specialTitleEnd == len(notes)
-        if specialTitleStart != 6:
+        if specialTitleStart != 6:#if we didn't find TITLE:
         	genericTitleStart = className.find("Topics in Computer Science")
         	className = className[:genericTitleStart] +"Special Topics: "+ notes[specialTitleStart:specialTitleEnd]
         
@@ -255,7 +253,7 @@ dept_search_file = "COMP_search_curl.sh"
 
 #extract ICSID from the curl used for the search
 dept_search = open(dept_search_file, "r").read().splitlines()
-dept_search_data = dept_search[-2]
+dept_search_data = dept_search[-1]
 start_ICSID = dept_search_data.find("ICSID=")
 end_ICSID = dept_search_data.find("&", start_ICSID)
 ICSID = dept_search_data[start_ICSID+6: end_ICSID]
@@ -272,9 +270,10 @@ while termCounter < numTerms:
     term_folder = term_folder_list[termCounter]
     term_query_string = term_query_string_list[termCounter]
 
+    #Depts causing problems, to be added back in later: BCB, GEOL
     #Can include any dept where there are <130 courses listed with a number under 999
     #COMP needs to be first or there will be issues
-    dept_list = ["COMP", "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BCB", "BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "DRAM", "ECON", "EDUC", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG", "GEOL", "HIST", "INLS", "LING", "MASC", "MATH", "MEJO", "PHIL", "PHYS", "PLAN", "PLCY", "POLI", "PSYC", "ROML", "SOCI", "STOR", "WGST"]
+    dept_list = ["COMP", "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "DRAM", "ECON", "EDUC", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG", "HIST", "INLS", "LING", "MASC", "MATH", "MEJO", "PHIL", "PHYS", "PLAN", "PLCY", "POLI", "PSYC", "ROML", "SOCI", "STOR", "WGST"]
     #any department where there are <130 courses under 500 and another <130 listed over 500
     #needs to go in both dept_list and large_dept_list
     large_dept_list = ["BIOL","CHEM","ENGL","MATH"]
@@ -301,7 +300,7 @@ while termCounter < numTerms:
         dept_search_file = createSearchCommand(term_query_string, stateNum, dept, bigDept, ICSID, bigCutoff)
 
         numClasses = startClassList(dept_search_file)
-        if numClasses == -1 and skipDeptCounter < 3:
+        if numClasses == -1 and skipDeptCounter < 4:
             skipDeptCounter += 1
             print("skipping to next department\n")
             continue
@@ -348,8 +347,12 @@ while termCounter < numTerms:
             #messy
             dept_search_file = "working_files/second_"+dept+"_search_curl.sh"
             numClasses = startClassList(dept_search_file)
-            #if a big dept fails to find classes for the second file, give up
-            if numClasses == -1:
+            if numClasses == -1 and skipDeptCounter < 4:
+                skipDeptCounter += 1
+                print("skipping to next department\n")
+                continue
+            elif numClasses == -1:
+                print("something is wrong, giving up\n")
                 sys.exit(1)
             #for each class
             for i in range(numClasses):
