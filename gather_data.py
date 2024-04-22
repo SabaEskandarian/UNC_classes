@@ -237,9 +237,9 @@ def addClassEntry(state, dept_search_file, ICSID, i):
     return tableLines
 
 
-#term_list = ["spring 2023"]
-#term_folder_list = ["spring2023"]
-#term_query_string_list = ["2229"]
+#term_list = ["spring 2024"]
+#term_folder_list = ["spring2024"]
+#term_query_string_list = ["2242"]
 #term_list = ["summer I 2023", "summer II 2023"]
 #term_folder_list = ["summerI2023", "summerII2023"]
 #term_query_string_list = ["2233", "2234"]
