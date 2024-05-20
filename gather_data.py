@@ -58,7 +58,7 @@ def getContentById(targetId, data):
     soup = BeautifulSoup(relevantData, 'html.parser')
     if targetId == "MTG_INSTR$0":
         retString = str(soup.find(id=targetId).get_text()).replace(",", ",<br />")
-    if targetId == "DERIVED_CLSRCH_SSR_CLASSNOTE_LONG":
+    elif targetId == "DERIVED_CLSRCH_SSR_CLASSNOTE_LONG":
         #print(relevantData+"\n")
         retString = soup.find(id=targetId).get_text(separator='\n')+"\n"
     else:
