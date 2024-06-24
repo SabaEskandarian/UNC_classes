@@ -243,9 +243,12 @@ def addClassEntry(state, dept_search_file, ICSID, i):
 #term_list = ["summer I 2023", "summer II 2023"]
 #term_folder_list = ["summerI2023", "summerII2023"]
 #term_query_string_list = ["2233", "2234"]
-term_list = ["fall 2024", "summer I 2024", "summer II 2024"]
-term_folder_list = ["fall2024", "summerI2024", "summerII2024"]
-term_query_string_list = ["2249","2243","2244"]
+#term_list = ["fall 2024", "summer I 2024", "summer II 2024"]
+#term_folder_list = ["fall2024", "summerI2024", "summerII2024"]
+#term_query_string_list = ["2249","2243","2244"]
+term_list = ["fall 2024"]
+term_folder_list = ["fall2024"]
+term_query_string_list = ["2249"]
 numTerms = len(term_list)
 termCounter = 0
 
