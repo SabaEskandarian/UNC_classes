@@ -273,10 +273,10 @@ while termCounter < numTerms:
     term_folder = term_folder_list[termCounter]
     term_query_string = term_query_string_list[termCounter]
 
-    #Depts causing problems, to be added back in later: BUSI, GEOL, MASC, HIST, ROML
+    #Depts causing problems, to be added back in later: GEOL, MASC, HIST, ROML
     #Can include any dept where there are <130 courses listed with a number under 999
     #COMP needs to be first or there will be issues
-    dept_list = ["COMP", "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BCB", "BIOC", "BIOL", "BIOS", "BMME", "CHEM", "CLAR", "CMPL", "COMM", "DATA", "DRAM", "ECON", "EDUC", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG", "HBEH", "INLS", "LING", "MATH", "MEJO", "PHIL", "PHYS", "PLAN", "PLCY", "POLI", "PSYC", "SOCI", "STOR", "WGST"]
+    dept_list = ["COMP", "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BCB", "BIOC", "BIOL", "BIOS", "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "DATA", "DRAM", "ECON", "EDUC", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG", "HBEH", "INLS", "LING", "MATH", "MEJO", "NSCI", "PHIL", "PHYS", "PLAN", "PLCY", "POLI", "PSYC", "SOCI", "STOR", "WGST"]
     #any department where there are <130 courses under 500 and another <130 listed over 500
     #needs to go in both dept_list and large_dept_list
     large_dept_list = ["BIOL","CHEM","ENGL", "HIST", "MATH"]
