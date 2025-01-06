@@ -6,6 +6,8 @@ document.write("<form>\n");
 document.write("<label for='terms'>Choose a term: </label>\n");
 document.write("<select name='terms' onchange='redirect(this.value)'>\n");
 document.write("<option value=''>Choose Term</option>\n");
+document.write("<option value='summerII2025'>Summer II 2025</option>\n");
+document.write("<option value='summerI2025'>Summer I 2025</option>\n");
 document.write("<option value='spring2025'>Spring 2025</option>\n");
 document.write("<option value='fall2024'>Fall 2024</option>\n");
 document.write("<option value='summerII2024'>Summer II 2024</option>\n");
