@@ -286,11 +286,20 @@ while termCounter < numTerms:
         dept_list = ["COMP","AMST", "BIOL", "COMM", "MATH", "STOR"]
         large_dept_list = []
 
+    skipToDept = "COMP" #always set to COMP unless trying to skip ahead
+
     print("Starting term "+term)
     
     skipDeptCounter = 0
 
     for dept in dept_list:
+
+        try:
+            if dept_list.index(dept) < dept_list.index(skipToDept):
+                continue
+        except ValueError:
+            print("can't skip to the selected department. Will skip assuming it's not in this term.")
+            continue
 
         bigDept = False
         bigCutoff = 500
