@@ -246,9 +246,9 @@ def addClassEntry(state, dept_search_file, ICSID, i):
 #term_list = ["fall 2024", "summer I 2024", "summer II 2024"]
 #term_folder_list = ["fall2024", "summerI2024", "summerII2024"]
 #term_query_string_list = ["2249","2243","2244"]
-term_list = ["summer I 2025", "summer II 2025", "spring 2025"]
-term_folder_list = ["summerI2025","summerII2025","spring2025"]
-term_query_string_list = ["2253","2254","2252"]
+term_list = ["summer I 2025", "summer II 2025", "fall 2025"]
+term_folder_list = ["summerI2025","summerII2025","fall2025"]
+term_query_string_list = ["2253","2254","2259"]
 numTerms = len(term_list)
 termCounter = 0
 
@@ -283,7 +283,7 @@ while termCounter < numTerms:
     large_dept_cutoffs = [500, 250, 150, 250, 500]
 
     if "summer" in term:
-        dept_list = ["COMP","AMST", "COMM", "MATH", "STOR"]
+        dept_list = ["COMP","AMST", "BIOL", "COMM", "MATH", "STOR"]
         large_dept_list = []
 
     print("Starting term "+term)
