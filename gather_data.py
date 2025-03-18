@@ -4,6 +4,7 @@ import re
 import time
 import datetime
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 ###NOTE: to run this script, you need to do the following steps:
 #1) create working_files directory next to script
@@ -301,6 +302,14 @@ while termCounter < numTerms:
             print("can't skip to the selected department. Will skip assuming it's not in this term.")
             continue
 
+        #check that we're not running during a peak time
+        curr_time = datetime.now()
+        today7am = curr_time.replace(hour=7, minute=0)
+        today7pm = curr_time.replace(hour=19, minute=0)
+        if curr_time.weekday() < 5 and curr_time > today7am and curr_time < today7pm:
+            print("7am to 7pm on weekdays is a peak time. Turning off.")
+            sys.exit(1)
+
         bigDept = False
         bigCutoff = 500
         if dept in large_dept_list:
@@ -343,7 +352,7 @@ while termCounter < numTerms:
         html = html + "</p>\n"
 
         #get timestamp for start of search
-        timestamp = datetime.datetime.now()
+        timestamp = datetime.now()
         html = html + "<p>Data last updated: "+str(timestamp)+"</p>\n"
 
         #beginning of table
