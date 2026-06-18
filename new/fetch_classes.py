@@ -7,13 +7,15 @@ from bs4 import BeautifulSoup
 
 BASE_URL = "https://reports.unc.edu/class-search/tiled/?subject={subject}&term=2026+Fall"
 
-SUBJECTS = [
-    "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BCB", "BIOC", "BIOL", "BIOS",
-    "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "COMP", "DATA", "DRAM",
-    "ECON", "EDUC", "EMES", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG",
-    "HBEH", "INLS", "LING", "MATH", "MEJO", "NSCI", "PHIL", "PHYS", "PLAN",
-    "PLCY", "POLI", "PSYC", "SOCI", "STOR", "WGST",
-]
+SUBJECTS = ["COMP"]
+
+#SUBJECTS = [
+#    "AAAD", "AMST", "ANTH", "APPL", "ASTR", "BCB", "BIOC", "BIOL", "BIOS",
+#    "BMME", "BUSI", "CHEM", "CLAR", "CMPL", "COMM", "COMP", "DATA", "DRAM",
+#    "ECON", "EDUC", "EMES", "ENEC", "ENGL", "ENVR", "EPID", "EXSS", "GEOG",
+#    "HBEH", "INLS", "LING", "MATH", "MEJO", "NSCI", "PHIL", "PHYS", "PLAN",
+#    "PLCY", "POLI", "PSYC", "SOCI", "STOR", "WGST",
+#]
 
 CSS = """
 body{
@@ -127,6 +129,7 @@ HEADERS = ["Class #", "Course", "Title", "Time", "Credits", "Available Seats", "
 
 
 OUTPUT_DIR = "output"
+AFS_DIR = "/afs/cs.unc.edu/home/saba/public_html/UNC_classes"
 
 
 def build_html(subject, courses, all_subjects):
@@ -178,6 +181,13 @@ def process_subject(subject, all_subjects):
         f.write(output)
 
     print(f"Written to {out_file}", file=sys.stderr)
+
+    try:
+        afs_file = os.path.join(AFS_DIR, f"{subject}.html")
+        subprocess.run(["cp", out_file, afs_file], check=True)
+        print(f"Copied to {afs_file}", file=sys.stderr)
+    except Exception as e:
+        print(f"Could not copy to AFS ({afs_file}): {e}", file=sys.stderr)
 
 
 def main():
