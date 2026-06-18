@@ -313,9 +313,9 @@ while termCounter < numTerms:
         curr_time = datetime.now()
         today7am = curr_time.replace(hour=7, minute=0)
         today7pm = curr_time.replace(hour=19, minute=0)
-        if curr_time.weekday() < 5 and curr_time > today7am and curr_time < today7pm:
-            print("7am to 7pm on weekdays is a peak time. Turning off.")
-            sys.exit(1)
+        #if curr_time.weekday() < 5 and curr_time > today7am and curr_time < today7pm:
+        #    print("7am to 7pm on weekdays is a peak time. Turning off.")
+        #    sys.exit(1)
 
         bigDept = False
         bigCutoff = 500
